@@ -1,0 +1,8 @@
+pb_data/*
+!pb_data/.gitkeep
+pb_data.zip
+pocketbase
+pocketbase.exe
+CHANGELOG.md
+LICENSE.md
+pb_public
