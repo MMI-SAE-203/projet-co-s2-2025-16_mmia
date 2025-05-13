@@ -1,1 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 @import "tailwindcss";
+
+
+@theme{
+    /* typo */
+    --font-poppins: 'Poppins', sans-serif;
+    --font-jakarta: 'Plus Jakarta Sans', sans-serif;
+
+    
+        /* color */
+     --blanc: #ffffff;
+     --gris: #6a7273;
+     --gris-anthracite: #313131;
+     --noir: #000000;
+     --violet: #985293;
+     --blanc-casse: #ebeaec;
+     --bleu-cyan: #15bfcb;
+     --bleu-fonce: #000099;
+     --vert-foret: #04464a;
+      
+}
+
+body{
+    @apply font-jakarta;
+    @apply text-base
+}
+
+h1{
+    @apply font-poppins;
+    @apply text-2xl;
+}
+
+h2{
+    @apply font-poppins;
+    @apply text-xl
+}
