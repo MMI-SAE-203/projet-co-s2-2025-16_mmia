@@ -1,0 +1,58 @@
+---
+---
+
+<header class="sticky top-0 flex items-center justify-between px-4 gap-8 h-20">
+    <a href="/">
+      <!-- <img src={Logo.src} alt="Logo"> -->
+    </a>
+    <button
+      id="menu-btn"
+      class="group relative z-10 flex h-6 w-10 flex-col justify-between lg:hidden *:block *:ease *:h-0.5 *:w-full *:transform *:rounded-full *:bg-white *:transition *:duration-300"
+      aria-label="Menu"
+      aria-controls="menu"
+      aria-expanded="false"
+    >
+      <span class="group-aria-expanded:translate-y-[11px] group-aria-expanded:rotate-45"></span>
+      <span class="group-aria-expanded:-translate-y-[11px] group-aria-expanded:-rotate-45"></span>
+    </button>
+    <nav
+      id="menu"
+      class="flex-1 px-6 py-12 flex justify-between mt-20 flex-col fixed z-10 inset-0 bg-black visible opacity-100 max-lg:aria-hidden:invisible max-lg:aria-hidden:opacity-0 lg:mt-0 lg:flex-row lg:static lg:bg-transparent lg:py-6 lg:visible lg:opacity-100"
+      aria-hidden="true"
+    >
+      <ul class="flex flex-col *:font-impact text-3xl gap-4 lg:flex-row *:lg:text-sm *:lg:py-52 lg:place-content-evenly">
+        <li>
+            <a class='block p-4 rounded-lg text-white' href="/">Accueil</a>
+        </li>
+        <li>
+            <a class="block p-4 rounded-lg text-white" href="/forum">Forum</a>
+        </li>
+        <li>
+          <a class="block p-4 rounded-lg text-white" href="/contact">Contactez nous</a>
+        </li>
+      </ul>
+      <div>
+        <a href="/login" class="block p-4 rounded-lg text-white">Connexion</a>
+        <a href="/register" class="block p-4 rounded-lg text-white">Inscription</a>
+      </div>
+      <div>
+        
+      </div>
+    </nav>
+  </header>
+
+<script>
+  const toggle = document.querySelector("#menu-btn");
+  const nav = document.querySelector("#menu");
+  const page = document.body;
+
+  if (toggle && nav) {
+    toggle.addEventListener("click", () => {
+      const isOpen = toggle.ariaExpanded === "true";
+      const isClosed = !isOpen;
+      toggle.ariaExpanded = String(isClosed);
+      nav.ariaHidden = String(isOpen);
+      page.classList.toggle("noscroll", isClosed);
+    });
+  }
+</script>
