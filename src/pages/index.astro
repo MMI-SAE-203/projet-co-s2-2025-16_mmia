@@ -1,5 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import MMIA from '../assets/icones/logo.svg';
+import Fleche from '../assets/icones/fleche.svg';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
@@ -10,7 +12,16 @@ import Layout from '../layouts/Layout.astro';
         <div class="hidden lg:flex banner h-screen flex-col justify-center items-center gap-5 text-center">
             <canvas id="dotsCanvas" class="absolute w-full h-full top-0 bottom-0 pointer-events-none"></canvas>
         </div>
-    </main>    
+        <h1>Du mal en <span class=""> MMI </span> ? <br> <MMIA> est là </h1>
+        <div>
+            <a class="flex bg-[var(--gris-anthracite)]" href="/">Commencez maintenant ! <Fleche> </a>
+        </div>
+        <div>
+            
+        </div>
+
+    </main>   
+     
 
 
     <script src="../../script/app.js"></script>
