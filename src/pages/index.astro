@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import MMIA from '../assets/icones/logo.svg';
 import Fleche from '../assets/icones/fleche.svg';
+import Paperclip from '../assets/icones/paperclip.svg';
+
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
@@ -11,15 +13,83 @@ import Fleche from '../assets/icones/fleche.svg';
 	<main>
         <div class="hidden lg:flex banner h-screen flex-col justify-center items-center gap-5 text-center">
             <canvas id="dotsCanvas" class="absolute w-full h-full top-0 bottom-0 pointer-events-none"></canvas>
+            <div class="bg-white z-10"><h1 class="flex p-4 font-bold">Du mal en<span class="text-[var(--violet)]"> MMI </span> ?</h1> <span class="flex"> <p><MMIA></MMIA> est là </p></span>
+        
+           <a class="text-white flex bg-[var(--gris-anthracite)] z-10 " href="/">Commencez maintenant ! <Fleche> </a>
         </div>
-        <h1>Du mal en <span class=""> MMI </span> ? <br> <MMIA> est là </h1>
-        <div>
-            <a class="flex bg-[var(--gris-anthracite)]" href="/">Commencez maintenant ! <Fleche> </a>
+        </div>
+        
+        <div class="bg-[var(--gris-anthracite)] justify-centert m-6 h-20 w-250 rounded-2xl ">
+            <p class="text-white flex items-center text-3xl "><Paperclip/>Qu’apportons nous de plus que certaines IA génératives ?|</p>
         </div>
         <div>
-            
+            <p>Une révolution de l'éducation !</p>
+            <div>
+                <img src="/src/assets/images/accueil1.webp" alt="">
+                <p>Grâce à notre IA spécialisée dans les cours de MMI, entrez dans un nouveau monde !</p>
+            </div>
+            <button class="text-white bg-[var(--violet)]">À vos prompts !</button>
+        </div>
+        <div>
+            <p>Une communauté solidaire !</p>
+            <div>
+                <img src="/src/assets/images/accueil2.webp" alt="">
+                <p>Découvrez  toute une communauté solidaire constituée d’étudiants en MMI de tout niveau !</p>
+            </div>
+            <button class="text-white bg-[var(--violet)]">Au forum !</button>
+        </div>
+        <div>
+            <p>Une manière de travailler ludique !</p>
+            <div>
+                <img src="/src/assets/images/accueil3.webp" alt="">
+                <p>Apprenez à travailler au mieux en MMI grâce à MMIA</p>
+            </div>
+            <button class="text-white bg-[var(--violet)]">J'y vais !</button>
         </div>
 
+        <div class="bg-[var(--gris-anthracite)]">
+            <p>Nos tarifs</p>
+            <div class="bg-[var(--blanc-casse)]">
+                <p>Basique</p>
+                <p>0€/ mois</p>
+                <ul>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                </ul>
+                <button>En profiter</button>
+            </div>
+            <div class="bg-[var(--blanc-casse)]">
+                <p class="text-[var(--violet)]">Premium</p>
+                <p>10€/ mois</p>
+                <ul>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                </ul>
+                <button>En profiter</button>
+            </div>
+            <div class="bg-[var(--blanc-casse)]">
+                <p>Entreprise</p>
+                <p>0€/ mois</p>
+                <ul>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                    <li>avantage</li>
+                </ul>
+                <button>En profiter</button>
+            </div>
+        </div>
+
+        <div>
+
+        </div>
     </main>   
      
 
