@@ -5,33 +5,30 @@ import Layout from "../../layouts/Layout.astro";
 // import Mail from "../..icon-mail.svg";
 ---
 <Layout>
-    <h1>Contactez <br> Nous !</h1>
-    <h2>Nous sommes disponible 7 jours /7 par mail et par chat, cependant 5jours /7 par téléphone.</h2>
-    <div>
-        
-            <a href="/">
-                <img src="/src/assets/icones/icon-phone.svg" alt="">
-            </a>
-            <h2>Par Téléphone</h2>
-            <p>Appelez-nous au +33 01 55 60 36 41</p>
-        
-    </div>
-    <div>
-        
-            <a href="">
-                <img src="/src/assets/icones/icon-chat.svg" alt="">
-            </a>
-            <h2>Par le Forum</h2>
-            <p>Disposez d’informations directement sur le site !</p>
-        
-    </div>
-    <div>
-        
-            <a href="">
-                <img src="/src/assets/icones/icon-phone.svg" alt="">
-            </a>
-            <h2>Par Mail</h2>
-            <p>Écrivez-nous à l’addresse suivante :m-iacontact@gmail.com</p>
-        
+    <h1 class="text-center">Contactez <br> Nous !</h1>
+    <h2 class="text-center">Nous sommes disponible 7 jours /7 par mail et par chat, cependant 5jours /7 par téléphone.</h2>
+    <div class="*:justify-items-center *:my-11 *:border-y-2 *:border-red-800 *:py-5 *:px-10>
+        <div class="*:my-3.5">
+                <a href="/">
+                    <img src="/src/assets/icones/icon-phone.svg" alt="">
+                </a>
+                <p class="font-bold font-poppins text-2xl">Par Téléphone</p>
+                <p>Appelez-nous au +33 01 55 60 36 41</p>
+        </div>
+        <div class="*:my-3.5">
+                <a href="">
+                    <img src="/src/assets/icones/icon-chat.svg" alt="">
+                </a>
+                <p class="font-bold font-poppins text-2xl">Par le Forum</p>
+                <p>Disposez d’informations directement sur le site !</p>
+        </div>
+        <div class="*:my-3.5">
+                <a href="">
+                    <img src="/src/assets/icones/icon-phone.svg" alt="">
+                </a>
+                <p class="font-bold font-poppins text-2xl">Par Mail</p>
+                <p>Écrivez-nous à l’addresse suivante :</p>
+                <p>m-iacontact@gmail.com</p>
+        </div>
     </div>
 </Layout>
