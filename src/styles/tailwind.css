@@ -18,19 +18,29 @@
      --bleu-fonce: #000099;
      --vert-foret: #04464a;
       
+        /* supertext */
+     --supertext: 2.25rem;
 }
 
 body{
+    @apply bg-[var(--blanc-casse)];
+    @apply dark:bg-[var(--gris-anthracite)];
+    @apply text-[var(--gris-anthracite)];
+    @apply dark:text-[var(--blanc)];
     @apply font-jakarta;
-    @apply text-base
+    @apply text-base;
 }
 
 h1{
     @apply font-poppins;
-    @apply text-2xl;
 }
 
 h2{
     @apply font-poppins;
     @apply text-xl
+}
+
+.supertext{
+    @apply text-4xl;
+    @apply font-poppins;
 }
