@@ -1,0 +1,14 @@
+---
+const {...post} = Astro.props;
+---
+<div class="grid mb-15 text-center align-baseline items-center">
+    <div class="place-content-center mb-15 ">
+        <a href={`/invites/${post.id}`}>
+            {post.Titre}
+        </a>
+        <div class="mt-[50px] *:mb-12">
+            <p class="text-orange-400 font-bold mt-15">{post.Texte}</p>
+            <a class="block font-bold text-white bg-black p-3.5 rounded-md border border-solid border-red-600/100 m-10" href={`/forum/${post.id}`}>En voir plus</a>
+        </div>
+    </div>
+</div>

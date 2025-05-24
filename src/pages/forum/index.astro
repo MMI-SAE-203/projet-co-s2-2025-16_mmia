@@ -1,0 +1,26 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import CardPost from "../../components/Card_post.astro";
+import { getPosts } from "../../../backend/backend.mjs";
+
+const {id} = Astro.params;
+
+let message ='';
+let posts = [];
+
+posts = await getPosts() || [];
+
+if (!posts){
+	return Astro.redirect ('/posts');
+}
+console.log(posts)
+---
+<Layout titre=invites>
+    <h1 class="text-center my-12">Liste des invités</h1>
+    <div class="">
+        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-12">
+            {posts.map((post:any) => <CardPost {...post} />)}
+        </div>
+    </div>
+
+</Layout>

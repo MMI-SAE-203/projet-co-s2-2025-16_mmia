@@ -29,6 +29,7 @@ body{
     @apply dark:text-[var(--blanc)];
     @apply font-jakarta;
     @apply text-base;
+    @apply lg:text-3xl
 }
 
 h1{

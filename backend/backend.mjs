@@ -1,6 +1,6 @@
-import PocketBase from 'pocketbase';
-const pb = new PocketBase("http://127.0.0.1:8090/_/");
-
+import PocketBase from 'pocketbase' ;
+const pb = new PocketBase('https://mmia.pauldarlef.fr:443') ;
+//https://mmia.pauldarlef.fr:443
 
 //ajout / suppression / mise à jour d'un post
 export async function addNewPost(Post){
@@ -15,11 +15,16 @@ export async function updatePostById(id, Post){
     await pb.collection('post').update(id, Post);
 }
 
+//section Vue
 export async function getPosts(){
     try {
         let data = await pb.collection('post').getFullList({
             sort: '+Nb_Fav',
     });
+    data = data.map((item) => {
+        return item;
+     });
+    return data;
     } catch(error){
         console.log("Une erreur est survenue en lisant la liste des posts", error);
     }
