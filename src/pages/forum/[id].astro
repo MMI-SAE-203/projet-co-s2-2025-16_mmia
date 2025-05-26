@@ -1,0 +1,23 @@
+---
+import { getPost, getUserbyPost } from "../../../backend/backend.mjs";
+import Layout from "../../layouts/Layout.astro";
+
+const { id } = Astro.params;
+const post = await getPost(id);
+if(!post){
+   return Astro.redirect('/forum');
+};
+const user = await getUserbyPost(id);
+
+console.log(post);
+---
+<Layout titre={post.Titre}>
+    <div class="bg-[var(--gris-anthracite)] dark:bg-[var(--blanc-casse)] rounded-[5px] w-[390px] h-auto mx-5 *:mx-4">
+        <div>
+            <img src={user.img} alt="">
+        </div>
+        <span><hr></span>
+        <h1 class="dark:text-[var(--gris-anthracite)] font-bold">{post.Titre}</h1>
+        <div class="text-[var(--blanc-casse)] dark:text-[var(--gris-anthracite)] " set:html={post.Text}></div>
+    </div>
+</Layout>

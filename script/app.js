@@ -3,7 +3,7 @@ let canvas = document.getElementById('dotsCanvas');
 canvas.width = canvas.offsetWidth;
 canvas.height = canvas.offsetHeight;
 const ctx = canvas.getContext('2d');
-const dots = [];
+let dots = [];
 const arrayColors = [, '#985293', '#000000', '#FFFFFF', '#374151'];
 for (let index = 0; index < 50; index++) {
     dots.push({
