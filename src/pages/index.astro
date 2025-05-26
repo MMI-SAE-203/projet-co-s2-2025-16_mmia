@@ -8,12 +8,13 @@ import Paperclip from "../assets/icones/paperclip.svg";
 <Layout>
   <main>
     <div
-      class="hidden lg:flex banner h-screen flex-col justify-center items-center gap-5 text-center"
+      class="hidden lg:flex banner h-screen flex-col justify-center items-center gap-5 text-center "
     >
       <canvas
         id="dotsCanvas"
         class="absolute w-full h-full top-0 bottom-0 pointer-events-none"
       ></canvas>
+      
       <div class="z-10">
         <h1 class="flex p-4 font-bold">
           Du mal en<span class="text-[var(--violet)]"> MMI </span> ?
@@ -23,6 +24,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
         <a class="text-white flex bg-[var(--blanc-casse)] z-10" href="/"
           >Commencez maintenant ! <Fleche />
         </a>
+      </div>
       </div>
 
       <div
@@ -137,7 +139,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
       </div>
 
       <div></div>
-    </div>
+    
 
     <script src="../../script/app.js"></script>
   </main>
