@@ -1,4 +1,4 @@
-import PocketBase from 'pocketbase' ;
+import PocketBase from 'pocketbase'
 const pb = new PocketBase('https://mmia.pauldarlef.fr:443') ;
 //https://mmia.pauldarlef.fr:443
 
