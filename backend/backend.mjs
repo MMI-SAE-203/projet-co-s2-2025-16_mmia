@@ -1,5 +1,5 @@
-import PocketBase from 'pocketbase' ;
-const pb = new PocketBase('https://mmia.pauldarlef.fr:443') ;
+import PocketBase from 'pocketBase' ;
+const pb = new PocketBase('https://mmia.pauldarlef.fr:443/_/') ;
 //https://mmia.pauldarlef.fr:443
 
 //ajout / suppression / mise à jour d'un post
