@@ -28,9 +28,9 @@ import Paperclip from "../assets/icones/paperclip.svg";
       </div>
 
       <div
-        class="bg-[var(--gris-anthracite)] justify-center m-6 h-20 w-250 rounded-2xl"
+        class="bg-[var(--blanc-casse)] justify-center m-6 h-20 w-250 rounded-2xl items-center"
       >
-        <p class="text-white flex items-center text-3xl">
+        <p class="text-[var(--gris-anthracite)] flex items-center text-3xl ">
           <Paperclip />Qu’apportons nous de plus que certaines IA génératives ?|
         </p>
       </div>
@@ -40,7 +40,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
           <p class="text-5xl m-8">Une révolution de l'éducation !</p>
           <div class="items-center lg:flex flex-row items-center m-4">
             <img
-              class="h-160 w-200 border-7 rounded-3xl bg-[var(--blanc-casse)]"
+              class=" rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-7"
               src="/src/assets/images/accueil1.webp"
               alt=""
             />
@@ -59,7 +59,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
 
         <div class="flex flex-col">
           <p>Une communauté solidaire !</p>
-          <div class="flex flex-row-reverse items-center m-4">
+          <div class=" items-center lg:flex flex-row-reverse items-center m-4">
             <img
               class="h-160 w-200 border-7 rounded-3xl bg-[var(--blanc-casse)]"
               src="/src/assets/images/accueil2.webp"
@@ -79,7 +79,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
         </div>
         <div class="flex flex-col">
           <p>Une manière de travailler ludique !</p>
-          <div class="flex flex-row items-center m-4">
+          <div class="items-center lg:flex flex-row items-center m-4">
             <img
               class="h-160 w-200 border-7 rounded-3xl bg-[var(--blanc-casse)]"
               src="/src/assets/images/accueil3.webp"
@@ -90,51 +90,53 @@ import Paperclip from "../assets/icones/paperclip.svg";
             </p>
           </div>
           <div class="flex justify-center">
-            <button
+            <a href=""
               class="text-white bg-[var(--violet)] m-5 rounded-2xl border-10 border-[var(--violet)] text-xl font-bold"
-              >J'y vais !</button
-            >
+              >J'y vais !</a>
+            
           </div>
         </div>
       </div>
 
-      <div class="bg-[var(--gris-anthracite)]">
-        <p>Nos tarifs</p>
-        <div class="bg-[var(--blanc-casse)]">
-          <p>Basique</p>
-          <p>0€/ mois</p>
-          <ul>
-            <li>avantage</li>
-            <li>avantage</li>
-            <li>avantage</li>
-            <li>avantage</li>
-            <li>avantage</li>
-          </ul>
-          <button>En profiter</button>
-        </div>
-        <div class="bg-[var(--blanc-casse)]">
-          <p class="text-[var(--violet)]">Premium</p>
-          <p>10€/ mois</p>
-          <ul>
-            <li>avantage</li>
-            <li>avantage</li>
-            <li>avantage</li>
-            <li>avantage</li>
-            <li>avantage</li>
-          </ul>
-          <button>En profiter</button>
-        </div>
-        <div class="bg-[var(--blanc-casse)]">
-          <p>Entreprise</p>
-          <p>0€/ mois</p>
-          <ul>
-            <li>avantage</li>
-            <li>avantage</li>
-            <li>avantage</li>
-            <li>avantage</li>
-            <li>avantage</li>
-          </ul>
-          <button>En profiter</button>
+      <div class="bg-[var(--blanc-casse)]  ">
+        <p class="text-center text-[var(--gris-anthracite)] font-bold text-4xl m-5">Nos tarifs</p>
+        <div class="flex gap-30 justify-center items-center mx-6 ">
+        <div class="bg-[var(--gris-anthracite)] p-14 rounded-2xl h-150 w-100 flex flex-col my-10">
+  <div class="pb-4">
+    <p class="text-white pb-2 font-bold text-center">Basique</p>
+    <p class="text-[var(--gris-anthracite)] text-center bg-[var(--blanc-casse)] rounded-4xl pt-2 pb-2">0€/ mois</p>
+  </div>
+  <ul class="pt-3 mb-6 justify-center pl-3 flex-grow">
+    <li class="text-white mb-10">Accès à l'IA</li>
+    <li class="text-white mb-10">Forum en ligne</li>
+    <li class="text-white mb-10">Prompts limités</li>
+  </ul>
+  <a href="" class="bg-[var(--gris)] border-[var(--gris)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
+</div>
+        <div class="bg-[var(--gris-anthracite)] p-14 rounded-2xl h-150 w-100 flex flex-col">
+  <div class="pb-4">
+    <p class="text-[var(--violet)] pb-2 font-bold text-center">Premium</p>
+    <p class="text-[var(--gris-anthracite)] text-center bg-[var(--blanc-casse)] rounded-4xl pt-2 pb-2">10€/ mois</p>
+  </div>
+  <ul class="pt-3 mb-6 justify-center pl-3 flex-grow">
+    <li class="text-white mb-10">Plus de prompts disponibles</li>
+    <li class="text-white mb-10">Personnalisation plus complète</li>
+    <li class="text-white mb-10">Et plus encore</li>
+  </ul>
+  <a href="" class="bg-[var(--violet)] border-[var(--violet)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
+</div>
+        <div class="bg-[var(--gris-anthracite)] p-14 rounded-2xl h-150 w-100 flex flex-col">
+  <div class="pb-4">
+    <p class="text-white pb-2 font-bold text-center">Entreprise</p>
+    <p class="text-[var(--gris-anthracite)] text-center bg-[var(--blanc-casse)] rounded-4xl pt-2 pb-2">Tarif modulable
+</p>
+  </div>
+  <ul class="pt-3 mb-6 justify-center pl-3 flex-grow">
+    <li class="text-white mb-10">Tous les avantages du premium</li>
+    <li class="text-white mb-10">tarif de groupe</li>
+  </ul>
+  <a href="" class="bg-[var(--gris)] border-[var(--gris)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
+</div>
         </div>
       </div>
 
