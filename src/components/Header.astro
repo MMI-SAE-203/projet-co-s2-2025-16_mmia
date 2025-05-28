@@ -2,40 +2,35 @@
 import Logo from "../assets/icones/mmi-white.svg"
 ---
 
-<header class="sticky top-0 flex items-center px-4 gap-8 h-20 bg-[var(--gris-anthracite)] z-10">
-    <!-- Logo à gauche -->
+<header class="sticky top-0 flex items-center px-4 gap-8 h-20 bg-[var(--blanc-casse)] dark:bg-[var(--gris-anthracite)] text-[var(--gris-anthracite)] dark:text-[var(--blanc-casse)] z-10">
     <div class="flex-shrink-0">
       <a href="/">
         <Logo/>
       </a>
     </div>
 
-    <!-- Navigation centrée (cachée sur mobile) -->
-    <nav class="hidden lg:flex flex-1 justify-center">
-      <ul class="flex items-center gap-8">
+    <nav class="hidden lg:flex flex-1 justify-center ">
+      <ul class="flex items-center gap-8 ">
         <li>
-          <a class="block p-4 rounded-lg text-white text-sm hover:bg-gray-700 transition-colors" href="/">Accueil</a>
+          <a class="block p-4  text-xl hover:text-[var(--violet)] transition-colors" href="/">Accueil</a>
         </li>
         <li>
-          <a class="block p-4 rounded-lg text-white text-sm hover:bg-gray-700 transition-colors" href="/forum">Forum</a>
+          <a class="block p-4 text-xl hover:text-[var(--violet)] transition-colors" href="/forum">Forum</a>
         </li>
         <li>
-          <a class="block p-4 rounded-lg text-white text-sm hover:bg-gray-700 transition-colors" href="/contact">Contactez nous</a>
+          <a class="block p-4 text-xl hover:text-[var(--violet)] transition-colors" href="/contact">Contactez nous</a>
         </li>
       </ul>
     </nav>
 
-    <!-- Boutons connexion/inscription et toggle à droite (cachés sur mobile) -->
     <div class="hidden lg:flex items-center gap-4 flex-shrink-0">
-      <a href="/login" class="block p-2 rounded-lg text-white text-sm hover:bg-gray-700 transition-colors">Connexion</a>
-      <a href="/register" class="block p-2 rounded-lg text-white text-sm hover:bg-gray-700 transition-colors">Inscription</a>
+      <a href="/login" class="block p-2 text-xl hover:text-[var(--violet)] transition-colors">Connexion</a>
+      <a href="/register" class="block p-2 text-xl hover:text-[var(--violet)] transition-colors">Inscription</a>
       
-      <!-- Toggle jour/nuit -->
-      <label class="inline-flex items-center relative">
+      <label id="themeToggle" class="inline-flex items-center relative cursor-pointer">
         <input class="peer hidden" id="toggle" type="checkbox" />
-        <div
-          class=" relative w-[110px] h-[50px] bg-white peer-checked:bg-zinc-500 rounded-full border-2 border-gray-700 peer-checked:border-gray-700 after:absolute after:content-[''] after:w-[40px] after:h-[40px] after:bg-gradient-to-r from-orange-500 to-yellow-400 peer-checked:after:from-zinc-900 peer-checked:after:to-zinc-900 after:rounded-full after:top-[5px] after:left-[5px] active:after:w-[50px] peer-checked:after:left-[105px] peer-checked:after:translate-x-[-100%] shadow-sm duration-300 after:duration-300 after:shadow-md"
-        ></div>
+        <div class="relative w-[110px] h-[50px] bg-white peer-checked:bg-zinc-500 rounded-full border-2 border-gray-700 peer-checked:border-gray-700 hover:shadow-lg transition-shadow duration-300 after:absolute after:content-[''] after:w-[40px] after:h-[40px] after:bg-gradient-to-r from-orange-500 to-yellow-400 peer-checked:after:from-zinc-900 peer-checked:after:to-zinc-900 after:rounded-full after:top-[5px] after:left-[5px] active:after:w-[50px] peer-checked:after:left-[105px] peer-checked:after:translate-x-[-100%] shadow-sm duration-300 after:duration-300 after:shadow-md peer-focus-visible:ring-2 peer-focus-visible:ring-blue-500 peer-focus-visible:ring-offset-2">
+        </div>
         <svg
           height="0"
           width="100"
@@ -65,7 +60,6 @@ import Logo from "../assets/icones/mmi-white.svg"
       </label>
     </div>
 
-    <!-- Bouton menu mobile -->
     <button
       id="menu-btn"
       class="group relative z-30 flex h-6 w-10 flex-col justify-between lg:hidden ml-auto"
@@ -86,7 +80,6 @@ import Logo from "../assets/icones/mmi-white.svg"
       }
     </style>
 
-    <!-- Menu mobile en overlay -->
     <nav
       id="menu"
       class="fixed inset-0 z-20 bg-black px-6 py-12 flex flex-col justify-center items-center gap-8 invisible opacity-0 transition-all duration-300 lg:hidden [&[aria-hidden='false']]:visible [&[aria-hidden='false']]:opacity-100"
