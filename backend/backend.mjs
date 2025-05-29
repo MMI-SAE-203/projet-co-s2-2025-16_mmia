@@ -42,22 +42,26 @@ export async function getPost(id){
 
 export async function getUserbyPost(id){
     try {
-        // Récupérer le post avec l'utilisateur qui l'a créé
-        let post = await pb.collection('posts').getOne(id, {
-            expand: 'user'
-        });
-        
-        // Extraire l'utilisateur du post
-        let user = post.expand.user;
-        
-        // Ajouter l'URL de l'avatar si il existe
-        if (user && user.avatar) {
-            user.img = pb.files.getURL(user, user.avatar);
-        }
-        
-        return user;
+        let userpost = await pb.collection('post').getOne(id, {expand: 'user'});
+        userpost.img = pb.files.getURL(userpost.expand.user, userpost.expand.user.avatar);
+        return userpost;
     } catch (error) {
         console.error('Erreur lors de la récupération de l\'utilisateur du post:', error);
         return null;
     }
+}
+
+
+export async function login() {
+    await pb.collection('users').authWithPassword(document.getElementById("login").value,
+    document.getElementById("passwd").value);
+}
+
+export async function  register() {
+    await pb.collection('users').create({
+        email: document.getElementById("login").value,
+        password: document.getElementById("passwd").value,
+        nom: document.getElementById("nom").value,
+        passwordConfirm: document.getElementById("passwd").value,
+    });
 }

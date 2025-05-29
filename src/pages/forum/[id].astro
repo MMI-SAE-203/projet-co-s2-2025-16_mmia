@@ -1,6 +1,7 @@
 ---
 import { getPost, getUserbyPost } from "../../../backend/backend.mjs";
 import Layout from "../../layouts/Layout.astro";
+import Picture from "astro/components/Picture.astro";
 
 const { id } = Astro.params;
 const post = await getPost(id);
@@ -9,12 +10,13 @@ if(!post){
 };
 const user = await getUserbyPost(id);
 
-console.log(post);
+// console.log(post);
+console.log(user);
 ---
 <Layout titre={post.Titre}>
     <div class="bg-[var(--gris-anthracite)] dark:bg-[var(--blanc-casse)] rounded-[5px] w-[390px] h-auto mx-5 *:mx-4">
         <div>
-            <img src={user.img} alt="">
+            <!-- <img src={user?.avatar || ''} alt="alaidejenpeuxplus"> -->
         </div>
         <span><hr></span>
         <h1 class="dark:text-[var(--gris-anthracite)] font-bold">{post.Titre}</h1>
