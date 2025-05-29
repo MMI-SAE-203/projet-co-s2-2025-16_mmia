@@ -17,6 +17,7 @@
      --bleu-cyan: #15bfcb;
      --bleu-fonce: #000099;
      --vert-foret: #04464a;
+     --bleu-sombre: #374151;
       
         /* supertext */
      --supertext: 2.25rem;
@@ -38,7 +39,7 @@ h1{
 
 h2{
     @apply font-poppins;
-    @apply text-xl
+   
 }
 
 
