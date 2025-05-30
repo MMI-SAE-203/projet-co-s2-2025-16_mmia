@@ -1,6 +1,8 @@
 import PocketBase from 'pocketbase'
 const pb = new PocketBase('https://mmia.pauldarlef.fr:443') ;
 //https://mmia.pauldarlef.fr:443
+//http://127.0.0.1:8090
+
 
 //ajout / suppression / mise à jour d'un post
 export async function addNewPost(Post){
@@ -40,10 +42,34 @@ export async function getPost(id){
     }
 }
 
+
+export async function getUser(id) {
+    try {
+        let data = await pb.collection('users').getOne(id);
+        return data;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant l\'utilisateur', error);
+        return null;
+    }
+}
+
+export async function getUsers() {
+    try {
+        const userrecords = await pb.collection('users').getFullList();
+        return userrecords;
+    } catch (error) {
+        console.log('Une erreur est survenue en lisant la liste des utilisateurs', error);
+        return (e);
+    }
+}
+
+
 export async function getUserbyPost(id){
     try {
         let userpost = await pb.collection('post').getOne(id, {expand: 'user'});
-        userpost.img = pb.files.getURL(userpost.expand.user, userpost.expand.user.avatar);
+        if (userpost.expand && userpost.expand.user && userpost.expand.user.avatar) {
+            userpost.img = pb.files.getURL(userpost.expand.user, userpost.expand.user.avatar);
+        }
         return userpost;
     } catch (error) {
         console.error('Erreur lors de la récupération de l\'utilisateur du post:', error);
