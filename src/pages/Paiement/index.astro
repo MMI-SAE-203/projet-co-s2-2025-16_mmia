@@ -1,0 +1,125 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Apple from "../..//assets/icones/apple.svg";
+import Perso from "../../assets/icones/perso.svg";
+---
+
+<Layout>
+    <h1 class="text-center text-7xl mt-20">Méthode de Paiement</h1>
+    <div>
+    <div class="flex justify-center gap-20">
+        <div class="bg-[var(--blanc-casse)] p-20 rounded-2xl m-10">
+            <p class="text-center text-[var(--gris-anthracite)] ">Carte Bancaire</p>
+        </div>
+        <div class="bg-[var(--blanc-casse)] p-20 rounded-2xl m-10">
+            <Apple />
+        </div>
+    </div>
+    <div>
+    <div class="flex justify-center">
+        <hr class="border-[var(--violet)] border-3 w-210 rounded-2xl">
+    </div>
+
+    
+    <form class="w-220 mx-auto  p-8 rounded-2xl">
+            <!-- Nom sur la carte -->
+            <div class="mb-6">
+                <label class="block text-[var(--violet)] text-sm font-semibold mb-3">Nom sur la carte</label>
+                <div class="relative">
+                    <input
+                        type="text"
+                        placeholder="Toto Jones"
+                        class="w-full rounded-2xl p-4 bg-gray-100 text-gray-700 text-lg placeholder-gray-500 border-0 focus:ring-2 focus:ring-(--violet) focus:outline-none"
+                    />
+                    <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
+                        <svg class="w-5 h-5 text-(--violet)" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Numéro de carte -->
+            <div class="mb-6">
+                <label class="block text-[var(--violet)] text-sm font-semibold mb-3">Numéro de carte</label>
+                <div class="relative">
+                    <input
+                        type="text"
+                        placeholder="0000 0000 0000 0000"
+                        maxlength="19"
+                        class="w-full rounded-2xl p-4 bg-gray-100 text-gray-700 text-lg placeholder-gray-500 border-0 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                        oninput="this.value = this.value.replace(/\s/g, '').replace(/(\d{4})/g, '$1 ').trim()"
+                    />
+                    <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
+                        <svg class="w-5 h-5 stroke-(--violet) text-(--violet)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date d'expiration et CVV -->
+            <div class="flex gap-4 mb-8">
+                <!-- Date d'expiration -->
+                <div class="flex-1">
+                    <label class="block text-[var(--violet)] text-sm font-semibold mb-3">Date d'expiration</label>
+                    <div class="relative">
+                        <input
+                            type="text"
+                            placeholder="12/26"
+                            maxlength="5"
+                            class="w-full rounded-2xl p-4 bg-gray-100 text-gray-700 text-lg placeholder-gray-500 border-0 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                            oninput="this.value = this.value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '$1/$2')"
+                        />
+                        <div class="absolute right-4 top-1/2 transform -translate-y-1/2">
+                            <svg class="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CVV -->
+                <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-3">
+                        <label class="text-[var(--violet)] text-sm font-semibold">CVV</label>
+                        <div class="relative group">
+                            <svg class="w-4 h-4 text-[var(--violet)] cursor-help" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="123"
+                        maxlength="4"
+                        class="w-full rounded-2xl p-4 bg-gray-100 text-gray-700 text-lg placeholder-gray-500 border-0 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+                        oninput="this.value = this.value.replace(/\D/g, '')"
+                    />
+                </div>
+            </div>
+
+            <!-- Boutons -->
+            <div class="flex gap-4">
+                <button
+                    type="button"
+                    class="flex-1 bg-gray-600 hover:bg-gray-700 text-white font-semibold py-4 px-8 rounded-2xl transition-colors duration-200"
+                >
+                    Annuler
+                </button>
+                <button
+                    type="submit"
+                    class="flex-1 bg-[var(--violet)] hover:bg-purple-700 text-white font-semibold py-4 px-8 rounded-2xl transition-colors duration-200"
+                >
+                    Confirmer
+                </button>
+            </div>
+        </form>
+
+    </div>
+    </div>
+</Layout>
