@@ -9,7 +9,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
 <Layout>
   <script src="../../script/app.js"></script>
   <main>
-    <div class="hidden lg:flex banner h-screen flex-col justify-center items-center gap-5 text-center">
+    <div class="flex banner h-screen flex-col justify-center items-center gap-5 text-center">
             <canvas id="dotsCanvas" class="absolute w-full h-full top-0 bottom-0 pointer-events-none"></canvas>
             
       
@@ -18,7 +18,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
           Du mal en MMI  ?
         </h1>
        <p class="text-7xl font-bold"><MMIA class="inline-block" /> est là</p>
-        <div class="flex bg-white justify-center rounded-2xl p-3 mt-20">
+        <div class="flex bg-[var(--blanc-casse)] justify-center rounded-2xl p-3 mt-20">
           <a class="text-[var(--gris-anthracite)] flex  text-3xl font-bold   p-2 px-3 " href="/Chat"
             >Commencez maintenant ! <Fleche class="ml-40" />
           </a>
@@ -28,7 +28,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
       </div>
 
       <div
-        class="bg-[var(--blanc-casse)] flex justify-center  h-20 w-250 rounded-2xl items-center m-30 "
+        class="bg-[var(--blanc-casse)] flex justify-center  h-20 w-250 rounded-2xl items-center ml-50  "
       >
         <p class="text-[var(--gris-anthracite)] flex items-center  text-3xl ">
           <Paperclip class="mr-20" />Qu’apportons nous de plus que certaines IA génératives ?
@@ -65,7 +65,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
              <p class="text-right pr-22 text-5xl font-bold m-8">Une communauté solidaire !</p>
              <div class="  lg:flex flex-row-reverse items-center m-4">
                <img
-                 class="h-160 w-200 border-10 rounded-3xl bg-[var(--blanc-casse)]"
+                 class="rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-10"
                  src="/src/assets/images/accueil2.webp"
                  alt=""
                />
@@ -86,7 +86,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
             <p class="text-5xl font-bold  m-8">Une manière de travailler ludique !</p>
             <div class="items-center lg:flex flex-row  m-4">
               <img
-                class="h-160 w-200 border-10 rounded-3xl bg-[var(--blanc-casse)]"
+                class="rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-10"
                 src="/src/assets/images/accueil3.webp"
                 alt=""
               />
@@ -112,9 +112,9 @@ import Paperclip from "../assets/icones/paperclip.svg";
     <p class="text-[var(--gris-anthracite)] text-center bg-[var(--blanc-casse)] rounded-4xl pt-2 pb-2">0 € / mois</p>
   </div>
   <ul class="pt-3 mb-6 justify-center pl-3 flex-grow *:text-center">
-    <li class="text-white my-10">Accès à l'IA</li>
-    <li class="text-white my-10">Forum en ligne</li>
-    <li class="text-white my-10">Prompts limités</li>
+    <li class="text-[var(--blanc-casse)] my-10">Accès à l'IA</li>
+    <li class="text-[var(--blanc-casse)] my-10">Forum en ligne</li>
+    <li class="text-[var(--blanc-casse)] my-10">Prompts limités</li>
   </ul>
   <a href="" class="bg-[var(--gris)] border-[var(--gris)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
 </div>
@@ -124,21 +124,21 @@ import Paperclip from "../assets/icones/paperclip.svg";
     <p class="text-[var(--gris-anthracite)] text-center bg-[var(--blanc-casse)] rounded-4xl pt-2 pb-2">10 € / mois</p>
   </div>
   <ul class="pt-3 mb-6 justify-center pl-3 flex-grow">
-    <li class="text-white mb-10">Plus de prompts disponibles</li>
-    <li class="text-white mb-10">Personnalisation plus complète</li>
-    <li class="text-white mb-10">Et plus encore</li>
+    <li class="text-[var(--blanc-casse)] mb-10">Plus de prompts disponibles</li>
+    <li class="text-[var(--blanc-casse)] mb-10">Personnalisation plus complète</li>
+    <li class="text-[var(--blanc-casse)] mb-10">Et plus encore</li>
   </ul>
   <a href="" class="bg-[var(--violet)] border-[var(--violet)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
 </div>
         <div class="bg-[var(--gris-anthracite)] p-14 rounded-2xl h-150 w-100 flex flex-col">
   <div class="pb-4">
-    <p class="text-white pb-2 font-bold text-center">Entreprise</p>
+    <p class="text-[var(--blanc-casse)] pb-2 font-bold text-center">Entreprise</p>
     <p class="text-[var(--gris-anthracite)] text-center bg-[var(--blanc-casse)] rounded-4xl pt-2 pb-2">Tarif modulable
 </p>
   </div>
   <ul class="pt-3 mb-6 justify-center pl-3 flex-grow">
-    <li class="text-white my-10">Tous les avantages du premium</li>
-    <li class="text-white my-10">tarif de groupe</li>
+    <li class="text-[var(--blanc-casse)] my-10">Tous les avantages du premium</li>
+    <li class="text-[var(--blanc-casse)] my-10">tarif de groupe</li>
   </ul>
   <a href="" class="bg-[var(--gris)] border-[var(--gris)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
 </div>
