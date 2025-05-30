@@ -15,9 +15,6 @@ console.log(user);
 ---
 <Layout titre={post.Titre}>
     <div class="bg-[var(--gris-anthracite)] dark:bg-[var(--blanc-casse)] rounded-[5px] w-[390px] h-auto mx-5 *:mx-4">
-        <div>
-            <!-- <img src={user?.avatar || ''} alt="alaidejenpeuxplus"> -->
-        </div>
         <span><hr></span>
         <h1 class="dark:text-[var(--gris-anthracite)] font-bold">{post.Titre}</h1>
         <div class="text-[var(--blanc-casse)] dark:text-[var(--gris-anthracite)] " set:html={post.Text}></div>
