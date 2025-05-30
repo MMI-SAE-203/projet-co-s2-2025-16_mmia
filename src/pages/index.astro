@@ -9,18 +9,18 @@ import Paperclip from "../assets/icones/paperclip.svg";
 <Layout>
   <script src="../../script/app.js"></script>
   <main>
-    <div class="flex banner h-screen flex-col justify-center items-center gap-5 text-center">
+    <div class="flex banner h-screen flex-col justify-center items-center gap-5 text-center px-4">
             <canvas id="dotsCanvas" class="absolute w-full h-full top-0 bottom-0 pointer-events-none"></canvas>
             
       
-      <div class=" flex flex-col">
-        <h1 class="flex p-4 font-bold text-7xl">
+      <div class="lg:flex lg:flex-col">
+        <h1 class="flex p-4 font-bold text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
           Du mal en MMI  ?
         </h1>
-       <p class="text-7xl font-bold"><MMIA class="inline-block" /> est là</p>
-        <div class="flex bg-[var(--blanc-casse)] justify-center rounded-2xl p-3 mt-20">
-          <a class="text-[var(--gris-anthracite)] flex  text-3xl font-bold   p-2 px-3 " href="/Chat"
-            >Commencez maintenant ! <Fleche class="ml-40" />
+       <p class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold"><MMIA class="inline-block" /> est là</p>
+        <div class="flex bg-[var(--blanc-casse)] justify-center rounded-2xl p-3 mt-10 lg:mt-20">
+          <a class="text-[var(--gris-anthracite)] flex text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold p-2 px-3" href="/Chat"
+            >Commencez maintenant ! <Fleche class="ml-4 sm:ml-8 lg:ml-40" />
           </a>
         </div>
       </div>
@@ -28,119 +28,120 @@ import Paperclip from "../assets/icones/paperclip.svg";
       </div>
 
       <div
-        class="bg-[var(--blanc-casse)] flex justify-center  h-20 w-250 rounded-2xl items-center ml-50  "
+        class="hidden lg:visible lg:bg-[var(--blanc-casse)] lg:flex lg:justify-center  lg:h-20 lg:w-250 lg:rounded-2xl lg:items-center   "
       >
         <p class="text-[var(--gris-anthracite)] flex items-center  text-3xl ">
-          <Paperclip class="mr-20" />Qu’apportons nous de plus que certaines IA génératives ?
+          <Paperclip class="mr-20" />Qu'apportons nous de plus que certaines IA génératives ?
         </p>
         <span class="text-[var(--gris-anthracite)] animate-pulse ">|</span>
       </div>
 
       
 
-      <div class="">
+      <div class="px-4">
         <div class="flex flex-col pb-30">
-          <p class="text-5xl pl-6 m-8 font-bold">Une révolution de l'éducation !</p>
-          <div class="items-center lg:flex flex-row  m-4">
+          <p class="text-3xl sm:text-4xl lg:text-5xl pl-2 sm:pl-4 lg:pl-6 m-4 sm:m-6 lg:m-8 font-bold">Une révolution de l'éducation !</p>
+          <div class="items-center lg:flex flex-row m-2 sm:m-3 lg:m-4">
             <img
-              class=" rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-10"
+              class="rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-10"
               src="/src/assets/images/accueil1.webp"
               alt=""
             />
-            <p class="text-center">
+            <p class="text-center px-4 text-base sm:text-lg">
               Grâce à notre IA spécialisée dans les cours de MMI, entrez dans un
               nouveau monde !
             </p>
           </div>
           <div class="flex justify-center">
-            <button
-              class="text-white bg-[var(--violet)] m-5 rounded-2xl border-20 border-[var(--violet)] text-xl font-bold"
-              >À vos prompts !</button
-            >
+            <a href="/Chat"
+              class="text-white bg-[var(--violet)] m-3 sm:m-4 lg:m-5 rounded-2xl border-20 border-[var(--violet)] text-lg sm:text-xl font-bold px-4 py-2">
+              À vos prompts !</a>
+            
           </div>
         </div>
 
-        <div class="flex-row-reverse  pb-30">
+        <div class="flex-row-reverse pb-30">
           
-             <p class="text-right pr-22 text-5xl font-bold m-8">Une communauté solidaire !</p>
-             <div class="  lg:flex flex-row-reverse items-center m-4">
+             <p class="text-left sm:text-center lg:text-right pr-4 sm:pr-8 lg:pr-22 text-3xl sm:text-4xl lg:text-5xl font-bold m-4 sm:m-6 lg:m-8">Une communauté solidaire !</p>
+             <div class="lg:flex flex-row-reverse items-center m-2 sm:m-3 lg:m-4">
                <img
                  class="rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-10"
                  src="/src/assets/images/accueil2.webp"
                  alt=""
                />
-               <p class="">
-                 Découvrez toute une communauté solidaire constituée d’étudiants en
+               <p class="text-center px-4 text-base sm:text-lg">
+                 Découvrez toute une communauté solidaire constituée d'étudiants en
                  MMI de tout niveau !
                </p>
              </div>
              <div class="flex justify-center">
-               <button
-                 class="text-white bg-[var(--violet)] m-5 rounded-2xl border-20 border-[var(--violet)] text-xl font-bold"
-                 >Au forum !</button
-               >
+               <a href="/forum"
+                 class="text-white bg-[var(--violet)] m-3 sm:m-4 lg:m-5 rounded-2xl border-20 border-[var(--violet)] text-lg sm:text-xl font-bold px-4 py-2"
+                 >Au forum !
+                </a>
+               
           
             </div>
           </div>
           <div class="flex flex-col pb-30">
-            <p class="text-5xl font-bold  m-8">Une manière de travailler ludique !</p>
-            <div class="items-center lg:flex flex-row  m-4">
+            <p class="text-3xl sm:text-4xl lg:text-5xl font-bold m-4 sm:m-6 lg:m-8 px-2 sm:px-4 lg:px-0">Une manière de travailler ludique !</p>
+            <div class="items-center lg:flex flex-row m-2 sm:m-3 lg:m-4">
               <img
                 class="rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-10"
                 src="/src/assets/images/accueil3.webp"
                 alt=""
               />
-              <p class="text-center">
+              <p class="text-center px-4 text-base sm:text-lg">
                 Apprenez à travailler au mieux en MMI grâce à MMIA
               </p>
             </div>
             <div class="flex justify-center">
-              <a href=""
-                class="text-white bg-[var(--violet)] m-5 rounded-2xl border-20 border-[var(--violet)] text-xl font-bold"
+              <a href="/Chat"
+                class="text-white bg-[var(--violet)] m-3 sm:m-4 lg:m-5 rounded-2xl border-20 border-[var(--violet)] text-lg sm:text-xl font-bold px-4 py-2"
                 >J'y vais !</a>
 
             </div>
         </div>
       </div>
 
-      <div class="bg-[var(--blanc-casse)]  ">
-        <p class="text-center text-[var(--gris-anthracite)] font-bold text-4xl m-5">Nos tarifs</p>
-        <div class="flex gap-30 justify-center items-center mx-6 ">
-        <div class="bg-[var(--gris-anthracite)] p-14 rounded-2xl h-150 w-100 flex flex-col my-10">
+      <div class="bg-[var(--blanc-casse)] px-4">
+        <p class="text-center text-[var(--gris-anthracite)] font-bold text-2xl sm:text-3xl lg:text-4xl m-3 sm:m-4 lg:m-5">Nos tarifs</p>
+        <div class="flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-30 justify-center items-center mx-2 sm:mx-4 lg:mx-6">
+        <div class="bg-[var(--gris-anthracite)] p-6 sm:p-10 lg:p-14 rounded-2xl w-full max-w-sm sm:h-150 sm:w-100 flex flex-col my-4 sm:my-6 lg:my-10">
   <div class="pb-4">
     <p class="text-white pb-2 font-bold text-center">Basique</p>
     <p class="text-[var(--gris-anthracite)] text-center bg-[var(--blanc-casse)] rounded-4xl pt-2 pb-2">0 € / mois</p>
   </div>
   <ul class="pt-3 mb-6 justify-center pl-3 flex-grow *:text-center">
-    <li class="text-[var(--blanc-casse)] my-10">Accès à l'IA</li>
-    <li class="text-[var(--blanc-casse)] my-10">Forum en ligne</li>
-    <li class="text-[var(--blanc-casse)] my-10">Prompts limités</li>
+    <li class="text-[var(--blanc-casse)] my-4 sm:my-6 lg:my-10">Accès à l'IA</li>
+    <li class="text-[var(--blanc-casse)] my-4 sm:my-6 lg:my-10">Forum en ligne</li>
+    <li class="text-[var(--blanc-casse)] my-4 sm:my-6 lg:my-10">Prompts limités</li>
   </ul>
-  <a href="" class="bg-[var(--gris)] border-[var(--gris)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
+  <a href="/Paiement" class="bg-[var(--gris)] border-[var(--gris)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
 </div>
-        <div class="bg-[var(--gris-anthracite)] p-14 rounded-2xl h-150 w-100 flex flex-col">
+        <div class="bg-[var(--gris-anthracite)] p-6 sm:p-10 lg:p-14 rounded-2xl w-full max-w-sm sm:h-150 sm:w-100 flex flex-col my-4 sm:my-6 lg:my-10">
   <div class="pb-4">
     <p class="text-[var(--violet)] pb-2 font-bold text-center">Premium</p>
     <p class="text-[var(--gris-anthracite)] text-center bg-[var(--blanc-casse)] rounded-4xl pt-2 pb-2">10 € / mois</p>
   </div>
   <ul class="pt-3 mb-6 justify-center pl-3 flex-grow">
-    <li class="text-[var(--blanc-casse)] mb-10">Plus de prompts disponibles</li>
-    <li class="text-[var(--blanc-casse)] mb-10">Personnalisation plus complète</li>
-    <li class="text-[var(--blanc-casse)] mb-10">Et plus encore</li>
+    <li class="text-[var(--blanc-casse)] mb-4 sm:mb-6 lg:mb-10">Plus de prompts disponibles</li>
+    <li class="text-[var(--blanc-casse)] mb-4 sm:mb-6 lg:mb-10">Personnalisation plus complète</li>
+    <li class="text-[var(--blanc-casse)] mb-4 sm:mb-6 lg:mb-10">Et plus encore</li>
   </ul>
-  <a href="" class="bg-[var(--violet)] border-[var(--violet)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
+  <a href="/Paiement" class="bg-[var(--violet)] border-[var(--violet)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
 </div>
-        <div class="bg-[var(--gris-anthracite)] p-14 rounded-2xl h-150 w-100 flex flex-col">
+        <div class="bg-[var(--gris-anthracite)] p-6 sm:p-10 lg:p-14 rounded-2xl w-full max-w-sm sm:h-150 sm:w-100 flex flex-col my-4 sm:my-6 lg:my-10">
   <div class="pb-4">
     <p class="text-[var(--blanc-casse)] pb-2 font-bold text-center">Entreprise</p>
     <p class="text-[var(--gris-anthracite)] text-center bg-[var(--blanc-casse)] rounded-4xl pt-2 pb-2">Tarif modulable
 </p>
   </div>
   <ul class="pt-3 mb-6 justify-center pl-3 flex-grow">
-    <li class="text-[var(--blanc-casse)] my-10">Tous les avantages du premium</li>
-    <li class="text-[var(--blanc-casse)] my-10">tarif de groupe</li>
+    <li class="text-[var(--blanc-casse)] my-4 sm:my-6 lg:my-10">Tous les avantages du premium</li>
+    <li class="text-[var(--blanc-casse)] my-4 sm:my-6 lg:my-10">tarif de groupe</li>
   </ul>
-  <a href="" class="bg-[var(--gris)] border-[var(--gris)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
+  <a href="/Paiement" class="bg-[var(--gris)] border-[var(--gris)] border-10 rounded-2xl text-center font-semibold pl-2 pr-2 block">En profiter</a> 
 </div>
         </div>
       </div>
