@@ -43,7 +43,7 @@ h2{
 
 
 :root {
-    --blanc-casse: #f8f9fa;
+    --blanc-casse: #EBEAEC;
     --gris-anthracite: #2c2c2c;
     --blanc: #ffffff;
     --noir: #000000;
@@ -52,7 +52,7 @@ h2{
 /* Variables pour le mode sombre */
 .dark {
     --blanc-casse: #2c2c2c;
-    --gris-anthracite: #f8f9fa;
+    --gris-anthracite: ##EBEAEC;
     --blanc: #000000;
     --noir: #ffffff;
 }
