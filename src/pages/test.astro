@@ -1,0 +1,152 @@
+---
+import Layout from '../layouts/Layout.astro'
+---
+
+<Layout>
+<div class="bg-[var(--gris-anthracite)] p-6 rounded-2xl shadow max-w-xl w-full">
+    <h1 class="text-2xl font-bold mb-4">Discuter avec Ollama</h1>
+    
+    <!-- Section pour l'authentification -->
+    <div id="auth-section" class="mb-4">
+        <input
+            id="user-id"
+            type="text"
+            class="w-full p-2 border border-gray-300 rounded mb-2"
+            placeholder="ID utilisateur (optionnel)"
+        />
+        <button
+            id="new-chat-btn"
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded mb-2"
+        >
+            Nouveau Chat
+        </button>
+    </div>
+
+    <!-- Historique des messages -->
+    <div id="chat-history" class="mb-4 max-h-60 overflow-y-auto bg-gray-800 p-3 rounded">
+        <div class="text-sm text-gray-400">Historique des messages...</div>
+    </div>
+
+    <form id="chat-form" class="space-y-4">
+        <textarea
+            id="message"
+            rows="4"
+            class="w-full p-2 border border-gray-300 rounded"
+            placeholder="Pose ta question..."
+        ></textarea>
+        <button
+            type="submit"
+            class="w-full bg-[var(--violet)] hover:bg-purple-800 text-white font-semibold py-2 px-4 rounded"
+        >
+            Envoyer
+        </button>
+    </form>
+    
+    <div id="response" class="mt-4 text-[var(--blanc-casse)] whitespace-pre-wrap"></div>
+
+    <script type="module">
+        const form = document.getElementById('chat-form');
+        const messageInput = document.getElementById('message');
+        const responseDiv = document.getElementById('response');
+        const userIdInput = document.getElementById('user-id');
+        const newChatBtn = document.getElementById('new-chat-btn');
+        const chatHistory = document.getElementById('chat-history');
+
+        let currentChatId = null;
+        let currentUserId = null;
+
+        // Fonction pour ajouter un message à l'historique
+        function addMessageToHistory(content, isUser) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `mb-2 p-2 rounded ${isUser ? 'bg-blue-600' : 'bg-gray-600'}`;
+            messageDiv.innerHTML = `
+                <div class="text-xs text-gray-300">${isUser ? 'Vous' : 'IA'}</div>
+                <div class="text-sm">${content}</div>
+            `;
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        // Fonction pour charger l'historique d'un chat
+        async function loadChatHistory(chatId) {
+            try {
+                const response = await fetch(`/api/chat-history?chatId=${chatId}`);
+                const data = await response.json();
+                
+                chatHistory.innerHTML = '';
+                data.messages?.forEach((msg, index) => {
+                    // Les messages pairs sont de l'utilisateur, impairs de l'IA
+                    const isUser = msg.titre.includes('utilisateur');
+                    addMessageToHistory(msg.contenu, isUser);
+                });
+            } catch (error) {
+                console.error('Erreur lors du chargement de l\'historique:', error);
+            }
+        }
+
+        // Nouveau chat
+        newChatBtn.addEventListener('click', () => {
+            currentChatId = null;
+            currentUserId = userIdInput.value || null;
+            chatHistory.innerHTML = '<div class="text-sm text-gray-400">Nouveau chat démarré...</div>';
+            responseDiv.textContent = '';
+        });
+
+        // Envoi de message
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = messageInput.value.trim();
+            
+            if (!message) return;
+
+            // Ajouter le message utilisateur à l'historique
+            addMessageToHistory(message, true);
+
+            responseDiv.textContent = "⏳ Réponse en cours...";
+            
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        message,
+                        chatId: currentChatId,
+                        userId: currentUserId
+                    })
+                });
+
+                const data = await res.json();
+                
+                if (data.error) {
+                    responseDiv.textContent = `Erreur: ${data.error}`;
+                    return;
+                }
+
+                // Mettre à jour l'ID du chat si c'était un nouveau chat
+                if (data.chatId) {
+                    currentChatId = data.chatId;
+                }
+
+                // Afficher la réponse
+                responseDiv.textContent = data.response;
+                
+                // Ajouter la réponse à l'historique
+                addMessageToHistory(data.response, false);
+
+                // Vider le champ de saisie
+                messageInput.value = '';
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                responseDiv.textContent = 'Erreur de connexion';
+            }
+        });
+
+        // Auto-resize du textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = this.scrollHeight + 'px';
+        });
+    </script>
+</div>
+</Layout>
