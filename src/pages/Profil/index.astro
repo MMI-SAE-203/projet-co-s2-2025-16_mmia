@@ -1,21 +1,28 @@
 ---
 import Layout from "../../layouts/Layout.astro";
----
+import { getUser } from "../../../backend/backend.mjs";
+const { id } = Astro.params;
+const user = await getUser(id);
 
+---
+<!-- {user.nom} {user.prenom} {user.img} {user.specialite} {user.Pseudo} {user.age} {user.email} -->
 <Layout>
     <h1 class="text-center text-5xl my-10"> Profil</h1>
     <div class="flex gap-5 justify-center">
         <img src="/src/assets/images/accueil1.webp" class="rounded-full h-20 w-20" alt="">
         <div class="flex flex-col items-center ">
-        <p>Pseudo</p>
-        <p>Email</p>
+        <p>{user.Pseudo}</p>
+        <p>{user.email}</p>
         </div>
     </div>
 
     <div class="grid grid-cols-2 gap-3 mt-20">
-        <p class="text-center">Nom Prénom</p>
-        <p class="text-center">âge</p>
-        <p class="text-center">Spécialité</p>
+        <div>
+        <p class="text-center">{user.nom}</p>
+        <p class="text-center">{user.prenom}</p>
+        </div>
+        <p class="text-center">{user.age}</p>
+        <p class="text-center">{user.specialite}</p>
         <p class="text-center">Mes postes</p>
     </div>
     <div class="mt-20 flex justify-center ">
