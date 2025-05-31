@@ -12,13 +12,14 @@ import Logo from "../assets/icones/mmi-white.svg";
   </div>
 
   <nav class="hidden lg:flex flex-1 justify-center">
-    <ul class="flex items-center gap-8">
+    <ul class="flex items-start gap-8 ">
       <li>
         <a
           class="block p-4 text-xl hover:text-[var(--violet)] transition-colors"
           href="/">Accueil</a
         >
       </li>
+      
       <li>
         <a
           class="block p-4 text-xl hover:text-[var(--violet)] transition-colors"
@@ -110,25 +111,25 @@ import Logo from "../assets/icones/mmi-white.svg";
 
   <nav
     id="menu"
-    class="fixed inset-0 z-20 bg-black px-6 py-12 flex flex-col justify-center items-center gap-8 invisible opacity-0 transition-all duration-300 lg:hidden [&[aria-hidden='false']]:visible [&[aria-hidden='false']]:opacity-100"
+    class="fixed inset-0 z-20 bg-(--gris-anthracite) px-6 py-12 flex flex-col justify-center items-center gap-8 invisible opacity-0 transition-all duration-300 lg:hidden [&[aria-hidden='false']]:visible [&[aria-hidden='false']]:opacity-100"
     aria-hidden="true"
   >
     <ul class="flex flex-col items-center gap-6 text-center">
       <li>
         <a
-          class="block p-4 rounded-lg text-white text-3xl font-impact hover:bg-gray-800 transition-colors"
+          class="block p-4 rounded-lg text-(--blanc-casse) text-3xl font-impact hover:bg-gray-800 transition-colors"
           href="/">Accueil</a
         >
       </li>
       <li>
         <a
-          class="block p-4 rounded-lg text-white text-3xl font-impact hover:bg-gray-800 transition-colors"
+          class="block p-4 rounded-lg text-(--blanc-casse) text-3xl font-impact hover:bg-gray-800 transition-colors"
           href="/forum">Forum</a
         >
       </li>
       <li>
         <a
-          class="block p-4 rounded-lg text-white text-3xl font-impact hover:bg-gray-800 transition-colors"
+          class="block p-4 rounded-lg text-(--blanc-casse) text-3xl font-impact hover:bg-gray-800 transition-colors"
           href="/Contact">Contactez nous</a
         >
       </li>
@@ -137,12 +138,12 @@ import Logo from "../assets/icones/mmi-white.svg";
     <div class="flex flex-col items-center gap-4 mt-8">
       <a
         href="/Login"
-        class="block p-4 rounded-lg text-white text-xl hover:bg-gray-800 transition-colors"
+        class="block p-4 rounded-lg text-(--blanc-casse) text-xl hover:bg-gray-800 transition-colors"
         >Connexion</a
       >
       <a
         href="/Register"
-        class="block p-4 rounded-lg text-white text-xl hover:bg-gray-800 transition-colors"
+        class="block p-4 rounded-lg text-(--blanc-casse) text-xl hover:bg-gray-800 transition-colors"
         >Inscription</a
       >
     </div>

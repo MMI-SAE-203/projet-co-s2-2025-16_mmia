@@ -16,11 +16,11 @@ import Logo from "../../assets/icones/mmi-white.svg";
     </head>
 
     <body
-        class="min-h-screen from-[var(--gris-anthracite)] to-[var(violet)] flex items-center justify-center p-4 relative overflow-hidden"
+        class=" from-[var(--gris-anthracite)] to-[var(violet)] flex items-center justify-center  relative overflow-hidden"
     >
-        <!-- Desktop Layout -->
+    
         <div class="hidden md:block w-full">
-            <!-- Background circles for desktop -->
+           
             <div
                 class="absolute w-96 h-96 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full opacity-80 -top-48 -left-48"
             >
@@ -30,7 +30,7 @@ import Logo from "../../assets/icones/mmi-white.svg";
             >
             </div>
 
-            <!-- Desktop form container -->
+            
             <div class="flex items-center justify-center min-h-screen">
                 <div
                     class="w-full max-w-2xl p-8 bg-[var(--gris-anthracite)] shadow-2xl border-3 border-[var(--violet)] relative z-10"
@@ -83,7 +83,7 @@ import Logo from "../../assets/icones/mmi-white.svg";
                 </div>
             </div>
 
-            <!-- Theme toggle for desktop -->
+            
             <div class="absolute bottom-5 right-5">
                 <div class="relative">
                     <input
@@ -132,16 +132,16 @@ import Logo from "../../assets/icones/mmi-white.svg";
             </div>
         </div>
 
-        <!-- Mobile Layout -->
+        
         <div class="md:hidden min-h-screen w-full bg-[var(--gris-anthracite)] flex flex-col">
-            <!-- Header with logo -->
+            
             <div class="flex justify-center pt-8 pb-6">
                 <div class="w-12 h-12 rounded-lg flex items-center justify-center">
                     <a href="/"><Logo /></a>
                 </div>
             </div>
 
-            <!-- Main content -->
+           
             <div class="flex-1 px-6 py-4">
                 <h2 class="text-white text-2xl font-semibold text-center mb-6">
                     Inscription
@@ -192,7 +192,7 @@ import Logo from "../../assets/icones/mmi-white.svg";
                 </form>
             </div>
 
-            <!-- Mobile theme toggle - simplified and repositioned -->
+            
             <div class="flex justify-center pb-6">
                 <div class="relative">
                     <input
@@ -276,7 +276,7 @@ import Logo from "../../assets/icones/mmi-white.svg";
                 }
             });
 
-            // Only enable mouse move effect on desktop
+            
             if (window.innerWidth >= 768) {
                 document.addEventListener("mousemove", function (e) {
                     const circles = document.querySelectorAll(
