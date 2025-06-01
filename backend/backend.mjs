@@ -79,9 +79,24 @@ export async function getUserbyPost(id){
 }
 
 
-export async function login() {
-    await pb.collection('users').authWithPassword(document.getElementById("login").value,
-    document.getElementById("passwd").value);
+export async function login(email, password) {
+    try {
+        // Attempt authentication with PocketBase
+        const authData = await pb.collection('users').authWithPassword(email, password);
+        
+        // Return the auth data which contains user and token information
+        return {
+            success: true,
+            user: authData.record,
+            token: pb.authStore.token
+        };
+    } catch (error) {
+        console.error('Login failed:', error.message);
+        return {
+            success: false,
+            message: error.message || 'Authentication failed'
+        };
+    }
 }
 
 export async function  register() {

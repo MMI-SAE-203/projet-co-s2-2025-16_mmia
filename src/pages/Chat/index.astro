@@ -1,26 +1,40 @@
 ---
 import Layout from '../../layouts/Layout.astro'
+import { requireAuth, getCurrentUser } from '../../../script/auth';
+
+const authCheck = await requireAuth(Astro);
+if (authCheck) return authCheck;
+
+const user = await getCurrentUser();
 
 ---
-
-<Layout>
-<div class="bg-[var(--gris-anthracite)] p-6 rounded-2xl shadow max-w-xl w-full">
-    <h1 class="text-2xl font-bold mb-4">Discuter avec Ollama</h1>
-    <form id="chat-form" class="space-y-4">
-    <textarea
-        id="message"
-        rows="4"
-        class="w-full p-2 border border-gray-300 rounded"
-        placeholder="Pose ta question..."
-    ></textarea>
-    <button
-        type="submit"
-        class="w-full bg-[var(--violet)] hover:bg-purple-800 text-white font-semibold py-2 px-4 rounded"
-    >
-        Envoyer
-    </button>
-    </form>
-    <div id="response" class="mt-4 text-[var(--blanc-casse)] whitespace-pre-wrap"></div>
+    <Layout>
+    <div class="min-h-screen flex flex-col bg-[var(--gris-anthracite)]">
+        <!-- Chat messages area -->
+        <div class="flex-1 p-4 sm:p-6 overflow-y-auto">
+            <h1 class="text-2xl font-bold mb-4 text-center">Discuter avec Ollama</h1>
+            <div id="response" class="mt-4 text-[var(--blanc-casse)] whitespace-pre-wrap max-w-4xl mx-auto"></div>
+        </div>
+        
+        <!-- Fixed form at bottom -->
+        <div class="sticky bottom-0 bg-[var(--gris-anthracite)] border-t border-gray-600 p-4 sm:p-6">
+            <form id="chat-form" class="max-w-4xl mx-auto">
+                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
+                    <textarea
+                        id="message"
+                        rows="2"
+                        class="flex-1 p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[var(--violet)]"
+                        placeholder="Pose ta question..."
+                    ></textarea>
+                    <button
+                        type="submit"
+                        class="bg-[var(--violet)] hover:bg-purple-800 text-white font-semibold py-3 px-6 rounded-lg transition-colors sm:self-end whitespace-nowrap"
+                    >
+                        Envoyer
+                    </button>
+                </div>
+            </form>
+        </div>
 
     <script type="module">
     const form = document.getElementById('chat-form');

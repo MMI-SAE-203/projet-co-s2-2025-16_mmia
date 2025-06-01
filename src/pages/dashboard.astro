@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Tableau de bord</title>
+</head>
+<body>
+    <!-- Loading state pendant la vérification -->
+    <div id="loading" style="text-align: center; padding: 2rem;">
+        <p>Vérification de votre connexion...</p>
+    </div>
+    
+    <!-- Contenu pour utilisateur connecté -->
+    <div id="authenticated-content" style="display: none;">
+        <nav>
+            <div>Bienvenue, <span data-user-name></span>!</div>
+            <button id="logoutBtn">Déconnexion</button>
+        </nav>
+        
+        <main>
+            <h1>Tableau de bord</h1>
+            <p>Vous êtes bien connecté !</p>
+            
+            <div class="user-info">
+                <h2>Vos informations :</h2>
+                <div id="user-details"></div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Message si pas connecté -->
+    <div id="unauthenticated-content" style="display: none;">
+        <h1>Accès refusé</h1>
+        <p>Vous devez être connecté pour accéder à cette page.</p>
+        <a href="/Login">Se connecter</a>
+    </div>
+    <a href="/">Menu</a>
+
+    <script>
+        import { initAuth, isAuthenticated, getCurrentUser, logout } from '../../script/auth.js';
+        
+        // Initialiser et vérifier l'auth
+        initAuth();
+        
+        function checkAuthAndRedirect() {
+            const loading = document.getElementById('loading');
+            const authContent = document.getElementById('authenticated-content');
+            const unauthContent = document.getElementById('unauthenticated-content');
+            
+            if (isAuthenticated()) {
+                // Utilisateur connecté
+                const user = getCurrentUser();
+                
+                // Cacher le loading
+                loading.style.display = 'none';
+                
+                // Afficher le contenu authentifié
+                authContent.style.display = 'block';
+                
+                // Remplir les infos utilisateur
+                document.querySelector('[data-user-name]').textContent = 
+                    user?.name || user?.email || 'Utilisateur';
+                
+                document.getElementById('user-details').innerHTML = `
+                    <p><strong>Email :</strong> ${user?.email || 'N/A'}</p>
+                    <p><strong>Nom :</strong> ${user?.name || 'Non défini'}</p>
+                    <p><strong>ID :</strong> ${user?.id || 'N/A'}</p>
+                `;
+                
+            } else {
+                // Pas connecté - rediriger vers login
+                loading.style.display = 'none';
+                window.location.href = '/login';
+            }
+        }
+        
+        // Vérifier immédiatement
+        checkAuthAndRedirect();
+        
+        // Réécouter les changements d'auth
+        window.addEventListener('authStateChanged', (e) => {
+            if (!e.detail.isAuthenticated) {
+                window.location.href = '/login';
+            }
+        });
+        
+        // Gérer la déconnexion
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                logout();
+                window.location.href = '/login';
+            });
+        }
+    </script>
+</body>
+</html>

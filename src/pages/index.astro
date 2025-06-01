@@ -147,6 +147,7 @@ import Paperclip from "../assets/icones/paperclip.svg";
       </div>
 
       <script>
+        let bodytype = document.documentElement;
         const canvas = document.getElementById('dotsCanvas');
         const ctx = canvas.getContext('2d');
         
@@ -184,7 +185,11 @@ import Paperclip from "../assets/icones/paperclip.svg";
                 
                 ctx.beginPath();
                 ctx.arc(dot.x, dot.y, dot.radius, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(255, 255, 255, ${dot.opacity})`;
+                if (bodytype.classList.contains('dark')) {
+                    ctx.fillStyle = `rgba(0, 0, 0, ${dot.opacity})`;
+                } else {
+                    ctx.fillStyle = `rgba(255, 255, 255, ${dot.opacity})`;
+                }
                 ctx.fill();
             });
             

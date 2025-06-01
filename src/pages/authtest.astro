@@ -1,0 +1,126 @@
+---
+let errorMessage = '';
+
+if (Astro.request.method === "POST") {
+    try {
+        const data = await Astro.request.formData();
+        const email = data.get("email") as string;
+        const password = data.get("password") as string;
+
+        // Import côté serveur
+        const { login } = await import('../../script/login');
+        const result = await login(email, password);
+        
+        if (result.success) {
+            // Redirection après connexion réussie
+            return Astro.redirect("/dashboard");
+        } else {
+            errorMessage = result.error || "Erreur de connexion";
+        }
+        
+    } catch (error) {
+        console.error("Erreur de connexion:", error);
+        errorMessage = "Erreur technique. Veuillez réessayer.";
+    }
+}
+---
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 500; }
+        input { width: 100%; padding: 0.75rem; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 0.75rem; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .error-message { color: #dc3545; margin: 1rem 0; }
+        .success-message { color: #28a745; margin: 1rem 0; }
+    </style>
+</head>
+<body>
+    <!-- Vérifier si déjà connecté -->
+    <div id="loading-check" style="text-align: center; padding: 2rem;">
+        Vérification...
+    </div>
+    
+    <div id="login-form" class="login-container" style="display: none;">
+        <h1>Connexion</h1>
+        
+        {errorMessage && (
+            <div class="error-message">{errorMessage}</div>
+        )}
+        
+        <form method="POST" id="loginFormElement">
+            <div class="form-group">
+                <label for="email">Email :</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <button type="submit" id="submitBtn">Se connecter</button>
+        </form>
+        
+        <div id="clientError" class="error-message" style="display: none;"></div>
+    </div>
+    
+    <div id="already-logged" style="display: none; text-align: center; padding: 2rem;">
+        <h2>Vous êtes déjà connecté !</h2>
+        <a href="/dashboard">Aller au tableau de bord</a>
+    </div>
+
+    <script>
+        import { initAuth, isAuthenticated } from '../../script/auth.js';
+        import { login } from '../../script/login';
+        initAuth();
+        
+        // Vérifier si déjà connecté
+        function checkInitialState() {
+            const loadingCheck = document.getElementById('loading-check');
+            const loginForm = document.getElementById('login-form');
+            const alreadyLogged = document.getElementById('already-logged');
+            
+            if (isAuthenticated()) {
+                // Déjà connecté
+                loadingCheck.style.display = 'none';
+                alreadyLogged.style.display = 'block';
+            } else {
+                // Pas connecté, afficher le formulaire
+                loadingCheck.style.display = 'none';
+                loginForm.style.display = 'block';
+            }
+        }
+        
+        // Vérifier l'état initial
+        setTimeout(checkInitialState, 100); // Petit délai pour laisser PocketBase s'initialiser
+        
+        // Gestion du formulaire côté client (optionnel, en plus du serveur)
+        const form = document.getElementById('loginFormElement');
+        const submitBtn = document.getElementById('submitBtn');
+        const clientError = document.getElementById('clientError');
+        
+        form.addEventListener('submit', async (e) => {
+            // Laisser le serveur gérer, mais on peut ajouter du feedback client
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Connexion...';
+            
+            // Le formulaire va être soumis au serveur
+            // Si erreur côté serveur, la page se recharge avec le message d'erreur
+        });
+    </script>
+</body>
+</html>

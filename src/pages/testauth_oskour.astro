@@ -1,0 +1,77 @@
+---
+import { isAuthenticated, getCurrentUser, pb } from '../../script/auth.js';
+
+const authenticated = isAuthenticated();
+const user = getCurrentUser();
+---
+
+<!DOCTYPE html>
+<html>
+<body>
+    <h1>Test d'authentification</h1>
+    
+    <div>
+        <strong>État côté serveur :</strong>
+        <ul>
+            <li>Authentifié : {authenticated ? 'OUI' : 'NON'}</li>
+            <li>Utilisateur : {user ? JSON.stringify(user) : 'Aucun'}</li>
+        </ul>
+    </div>
+    
+    <div id="client-status">
+        <strong>État côté client :</strong>
+        <div id="client-info">Chargement...</div>
+    </div>
+    
+    <script>
+        import { pb, isAuthenticated, getCurrentUser, initAuth } from '../../script/auth.js';
+        
+        initAuth();
+        
+        function updateClientStatus() {
+            const clientAuth = isAuthenticated();
+            const clientUser = getCurrentUser();
+            
+            document.getElementById('client-info').innerHTML = `
+                <ul>
+                    <li>Authentifié : ${clientAuth ? 'OUI' : 'NON'}</li>
+                    <li>Token valide : ${pb.authStore.isValid ? 'OUI' : 'NON'}</li>
+                    <li>Utilisateur : ${clientUser ? JSON.stringify(clientUser) : 'Aucun'}</li>
+                    <li>localStorage : ${localStorage.getItem('pocketbase_auth') ? 'Présent' : 'Absent'}</li>
+                </ul>
+            `;
+        }
+        
+        // Mettre à jour immédiatement
+        updateClientStatus();
+        
+        // Mettre à jour lors des changements
+        window.addEventListener('authStateChanged', updateClientStatus);
+        
+        // Test de connexion
+        document.body.innerHTML += `
+            <div>
+                <h3>Test de connexion</h3>
+                <button id="testLoginBtn">Tester avec vos identifiants</button>
+            </div>
+        `;
+        
+        document.getElementById('testLoginBtn').addEventListener('click', async () => {
+            const email = prompt('Email:');
+            const password = prompt('Mot de passe:');
+            
+            if (email && password) {
+                try {
+                    const result = await pb.collection('users').authWithPassword(email, password);
+                    console.log('Login result:', result);
+                    updateClientStatus();
+                    alert('Connexion réussie !');
+                } catch (error) {
+                    console.error('Login error:', error);
+                    alert('Erreur: ' + error.message);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

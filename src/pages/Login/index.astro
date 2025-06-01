@@ -3,6 +3,59 @@ import Layout from "../../layouts/Layout.astro";
 import Logo from "../../assets/icones/logo.svg";
 import "../../styles/tailwind.css";
 import "../../styles/font.css";
+
+// Variables pour gérer les messages d'erreur
+let errorMessage = '';
+
+// Traitement du formulaire côté serveur
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const email = data.get("email") as string;
+    const password = data.get("password") as string;
+    const rememberMe = data.get("remember-me") === "on";
+
+    // Import côté serveur
+    const { default: PocketBase } = await import('pocketbase');
+    const pb = new PocketBase("https://mmia.pauldarlef.fr:443");
+    
+    try {
+      // Tenter l'authentification
+      const authData = await pb.collection('users').authWithPassword(email, password);
+      
+      // Si on arrive ici, c'est que l'authentification a réussi
+      // Définir le cookie et rediriger
+      const cookieExpiration = rememberMe 
+        ? new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 an si "Se souvenir de moi" est coché
+        : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);  // 30 jours par défaut
+      
+      const cookieData = pb.authStore.exportToCookie({
+        expires: cookieExpiration,
+        secure: true,
+        sameSite: "Lax",
+        path: "/"
+      });
+      
+      return new Response("", {
+        status: 302,
+        headers: {
+          "Location": "/",
+          "Set-Cookie": cookieData
+        }
+      });
+    } catch (authError) {
+      console.error("Authentification échouée:", authError);
+      errorMessage = "Email ou mot de passe incorrect";
+    }
+  } catch (error) {
+    console.error("Erreur de connexion:", error);
+    errorMessage = "Une erreur technique s'est produite. Veuillez réessayer.";
+  }
+}
+
+// Vérifier si l'utilisateur est déjà connecté
+let isAlreadyLoggedIn = false;
+// La vérification de connexion ne peut être faite que côté client, donc on ne redirige pas ici
 ---
 
 <!doctype html>
@@ -12,7 +65,7 @@ import "../../styles/font.css";
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="generator" content={Astro.generator} />
-        <title>Astro Basics</title>
+        <title>Connexion - MMIA</title>
     </head>
 
     <style>
@@ -24,8 +77,28 @@ import "../../styles/font.css";
                 #9333ea 100%
             );
         }
+        .loading {
+            display: none;
+            text-align: center;
+            color: #6b7280;
+            margin-top: 1rem;
+        }
+        #already-logged {
+            display: none;
+        }
     </style>
     <body class="bg-[var(--gris-anthracite)] overflow-hidden">
+        <!-- Message si déjà connecté -->
+        <div id="already-logged" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75 text-white">
+            <div class="bg-[var(--gris-anthracite)] p-8 rounded-lg text-center">
+                <h2 class="text-2xl font-semibold mb-4">Vous êtes déjà connecté</h2>
+                <p class="mb-6">Vous allez être redirigé vers l'accueil...</p>
+                <div class="flex justify-center">
+                    <a href="/" class="bg-gradient-purple px-6 py-2 rounded-lg hover:opacity-90">Aller à l'accueil</a>
+                </div>
+            </div>
+        </div>
+
         <!-- Desktop Layout -->
         <div class="hidden md:flex">
             <div
@@ -68,40 +141,53 @@ import "../../styles/font.css";
                     Connexion
                 </h2>
 
-                <form class="space-y-6">
+                {errorMessage && (
+                    <div class="text-red-500 text-sm mb-4 text-center">{errorMessage}</div>
+                )}
+
+                <form method="POST" id="loginForm" class="space-y-6">
                     <div>
                         <label
+                            for="email"
                             class="block text-sm font-medium text-gray-700 mb-2"
                         >
                             Adresse mail
                         </label>
                         <input
+                            id="email"
+                            name="email"
                             type="email"
                             placeholder="hello@gmail.com"
                             class="w-full text-[var(--gris-anthracite)] px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-(--violet) focus:border-transparent outline-none transition-all bg-gray-50"
+                            required
                         />
                     </div>
 
                    
                     <div>
                         <label
+                            for="password"
                             class="block text-sm font-medium text-gray-700 mb-2"
                         >
                             Mot de passe
                         </label>
                         <input
                             type="password"
+                            id="password"
+                            name="password"
                             placeholder="••••••••"
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg text-[var(--gris-anthracite)] focus:ring-2 focus:ring-(--violet) focus:border-transparent outline-none transition-all bg-gray-50"
+                            required
                         />
                     </div>
 
-                    
                     <div class="flex items-center justify-between">
                         <label class="flex items-center">
                             <input
                                 type="checkbox"
-                                class="rounded border-gray-300 text-(--violet) focus:ring-(--violet)
+                                name="remember-me"
+                                id="remember-me"
+                                class="rounded border-gray-300 text-(--violet) focus:ring-(--violet)"
                             />
                             <span class="ml-2 text-sm text-gray-600"
                                 >Se souvenir de moi</span
@@ -117,11 +203,15 @@ import "../../styles/font.css";
 
                     
                     <button
-                        type="submit"
-                        class="w-full bg-gradient-purple text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-(--violet) focus:ring-offset-2"
+                        type="submit" 
+                        id="submitBtn"
+                        class="submit-btn w-full bg-gradient-purple text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-(--violet) focus:ring-offset-2"
                     >
                         Connexion
                     </button>
+                    <div class="loading" id="loading">
+                        Connexion en cours...
+                    </div>
 
                     
                     <div class="text-center pt-4">
@@ -141,39 +231,47 @@ import "../../styles/font.css";
 
         <!-- Mobile Layout -->
         <div class="md:hidden min-h-screen bg-[var(--gris-anthracite)] flex flex-col">
-            <!-- Header with logo -->
             <div class="flex justify-center pt-12 pb-8">
                 <div class="w-12 h-12 rounded-lg flex items-center justify-center">
                     <a href="/"><Logo /></a>
                 </div>
             </div>
 
-            <!-- Main content -->
             <div class="flex-1 px-6 py-6">
                 <h2 class="text-2xl font-semibold text-[var(--blanc-casse)] mb-8 text-center">
                     Connexion
                 </h2>
 
-                <form class="space-y-6">
+                {errorMessage && (
+                    <div class="text-red-500 text-sm mb-4 text-center">{errorMessage}</div>
+                )}
+
+                <form method="POST" id="loginFormMobile" class="space-y-6">
                     <div>
-                        <label class="block text-sm font-medium text-[var(--blanc-casse)] mb-2">
+                        <label class="block text-sm font-medium text-[var(--blanc-casse)] mb-2" for="email-mobile">
                             Adresse mail
                         </label>
                         <input
                             type="email"
+                            id="email-mobile"
+                            name="email"
                             placeholder="toto@gmail.com"
                             class="w-full text-white px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-(--violet) focus:border-(--violet) outline-none transition-all bg-gray-700 placeholder-gray-400"
+                            required
                         />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-[var(--blanc-casse)] mb-2">
+                        <label class="block text-sm font-medium text-[var(--blanc-casse)] mb-2" for="password-mobile">
                             Mot de passe
                         </label>
                         <input
                             type="password"
+                            id="password-mobile"
+                            name="password"
                             placeholder="Abc123@"
                             class="w-full text-white px-4 py-3 border border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all bg-gray-700 placeholder-gray-400"
+                            required
                         />
                     </div>
 
@@ -181,9 +279,11 @@ import "../../styles/font.css";
                         <label class="flex items-center">
                             <input
                                 type="checkbox"
+                                name="remember-me"
+                                id="remember-me-mobile"
                                 class="rounded border-gray-600 text-purple-600 focus:ring-purple-500 bg-gray-700"
                             />
-                            <span class="ml-2 text-sm text-(--gris-anthracite)">Se souvenir de moi</span>
+                            <span class="ml-2 text-sm text-gray-400">Se souvenir de moi</span>
                         </label>
                         <a href="#" class="text-sm text-purple-400 hover:text-purple-300">
                             Mot de passe oublié ?
@@ -192,10 +292,14 @@ import "../../styles/font.css";
 
                     <button
                         type="submit"
+                        id="submitBtnMobile"
                         class="w-full bg-gradient-purple text-white py-3 px-4 rounded-lg font-medium hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-800"
                     >
                         Connexion
                     </button>
+                    <div class="loading" id="loadingMobile">
+                        Connexion en cours...
+                    </div>
 
                     <div class="text-center pt-4">
                         <span class="text-sm text-gray-400">Pas de compte ?</span>
@@ -210,33 +314,47 @@ import "../../styles/font.css";
             </div>
         </div>
 
-        <script>
+    <script>
+        import { initAuth, isAuthenticated } from '../../../script/auth.js';
+        
+        // Initialisation de l'authentification
+        document.addEventListener('DOMContentLoaded', function() {
+            initAuth();
             
-            window.addEventListener("load", function () {
-                const elements = document.querySelectorAll(".relative");
-                elements.forEach((el, index) => {
-                    el.style.opacity = "0";
-                    el.style.transform = "translateY(0px)";
-                    setTimeout(() => {
-                        el.style.transition = "all 0.6s ease";
-                        el.style.opacity = "1";
-                        el.style.transform = "translateY(0)";
-                    }, index * 200);
+            // Vérifier si l'utilisateur est déjà connecté
+            setTimeout(() => {
+                if (isAuthenticated()) {
+                    const alreadyLogged = document.getElementById('already-logged');
+                    if (alreadyLogged) {
+                        alreadyLogged.style.display = 'flex';
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 2000); // Rediriger après 2 secondes
+                    }
+                }
+            }, 100); // Petit délai pour s'assurer que PocketBase est initialisé
+            
+            // Gestion des formulaires
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Connexion...';
+                    }
+                    
+                    // Recherche de l'élément loading correspondant au formulaire
+                    const formId = form.id;
+                    const loadingId = formId === 'loginForm' ? 'loading' : 'loadingMobile';
+                    const loading = document.getElementById(loadingId);
+                    
+                    if (loading) {
+                        loading.style.display = 'block';
+                    }
                 });
             });
-
-            
-            const inputs = document.querySelectorAll("input");
-            inputs.forEach((input) => {
-                input.addEventListener("focus", function () {
-                    this.parentElement.style.transform = "scale(1.02)";
-                    this.parentElement.style.transition = "transform 0.2s ease";
-                });
-
-                input.addEventListener("blur", function () {
-                    this.parentElement.style.transform = "scale(1)";
-                });
-            });
-        </script>
-    </body>
+        });
+    </script>
+</body>
 </html>
