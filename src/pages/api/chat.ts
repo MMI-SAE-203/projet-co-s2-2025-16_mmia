@@ -12,7 +12,7 @@ export const POST: APIRoute = async ({ request }) => {
     // Générer la réponse avec Ollama
     const response = await ollama.chat({
       model: 'gemma3',
-      messages: [{ role: 'user', content: message }],
+      messages: [{ role: 'user', content: message, stream: true }],
     })
 
     const aiResponse = response.message.content

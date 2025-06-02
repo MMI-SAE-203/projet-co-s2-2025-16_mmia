@@ -8,13 +8,13 @@ const post = await getPost(id);
 if (!post) {
     return Astro.redirect("/forum");
 }
-const user = await getUserbyPost(id);
-if (!user) {
+const userPost = await getUserbyPost(id);
+if (!userPost) {
     return Astro.redirect("/forum");
 }
 
 // console.log(post);
-console.log(user);
+console.log(userPost);
 ---
 
 <Layout titre={post.Titre}>
@@ -25,17 +25,17 @@ console.log(user);
                     class="flex items-center space-x-3 lg:flex-col text-center"
                 >
                     <div class="w-24 h-24 rounded-full overflow-hidden">
-                        <a href=`/Profil/${user.expand.user.id}`
+                        <a href=`/Profil/${userPost.id}`
                             ><img
-                                src={user.img}
-                                alt={user.img}
+                                src={userPost.img}
+                                alt={userPost.img}
                                 class="w-full h-full object-cover rounded-full"
                             /></a
                         >
                     </div>
                     <div>
                         <h3 class="font-semibold text-gray-800">
-                            {user.expand.user.Pseudo}
+                            {userPost.Pseudo}
                         </h3>
                         <p class="text-sm text-gray-500">{post.created}</p>
                         <p class="text-sm text-gray-500">15h21</p>

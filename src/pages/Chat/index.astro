@@ -2,10 +2,10 @@
 import Layout from '../../layouts/Layout.astro'
 import { requireAuth, getCurrentUser } from '../../../script/auth';
 
-const authCheck = await requireAuth(Astro);
-if (authCheck) return authCheck;
+//const authCheck = await requireAuth(Astro);
+//if (authCheck) return authCheck;
 
-const user = await getCurrentUser();
+//const user = await getCurrentUser();
 
 ---
     <Layout>

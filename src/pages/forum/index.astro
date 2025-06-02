@@ -4,9 +4,9 @@ import CardPost from "../../components/Card_post.astro";
 import { getPosts } from "../../../backend/backend.mjs";
 import { requireAuth, getCurrentUser } from "../../../script/auth"; 
 
-const authCheck = await requireAuth(Astro);
-if (authCheck) return authCheck;
-const user = await getCurrentUser();
+//const authCheck = await requireAuth(Astro);
+//if (authCheck) return authCheck;
+//const user = await getCurrentUser();
 
 const {id} = Astro.params;
 
