@@ -26,27 +26,20 @@ import Fleche from "../../assets/icones/fleche-chat.svg";
         <!-- Chat messages area -->
         <div class="flex-1 p-4 sm:p-6 overflow-y-auto">
             <h1 class="text-sm font-bold mb-4 text-center lg:text-2xl">
-                Bonjour je suis une IA qui a pour but de t’aider en <span
-                    class="text-(--violet)"
-                >
-                    MMI
-                </span>. Tu peux me demander ce que tu veux !
+                Bonjour je suis une IA qui a pour but de t’aider en <span class="text-(--violet)">MMI</span>. Tu peux me demander ce que tu veux !
             </h1>
             <div
                 id="response"
-                class="mt-4 text-[var(--blanc-casse)] whitespace-pre-wrap max-w-4xl mx-auto"
-            >
+                class="mt-4 text-[var(--blanc-casse)] whitespace-pre-wrap max-w-4xl mx-auto">
             </div>
         </div>
 
         <!-- Fixed form at bottom -->
         <div
-    class="sticky bottom-0 bg-[var(--gris-anthracite)] border-t border-gray-600 p-4 sm:p-6"
->
+    class="sticky bottom-0 bg-[var(--gris-anthracite)] border-t border-gray-600 p-4 sm:p-6">
     <form id="chat-form" class="max-w-4xl mx-auto">
         <div
-            class="flex h-20 w-full justify-center items-center rounded-2xl bg-[var(--blanc-casse)] p-3"
-        >
+            class="flex h-20 w-full justify-center items-center rounded-2xl bg-[var(--blanc-casse)] p-3">
             <textarea
                 id="message"
                 rows="2"
@@ -71,8 +64,9 @@ import Fleche from "../../assets/icones/fleche-chat.svg";
                 const message = messageInput.value;
                 responseDiv.textContent = "⏳ Réponse en cours...";
                 const res = await fetch("/api/chat", {
+                    signal: AbortSignal.timeout(120000),
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json",'Accept-Charset': 'utf-8',},
                     body: JSON.stringify({ message }),
                 });
                 const data = await res.json();
