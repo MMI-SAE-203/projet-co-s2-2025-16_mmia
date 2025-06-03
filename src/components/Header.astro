@@ -13,9 +13,7 @@ try {
     if (isLoggedIn) {
       const currentUser = getCurrentUser();
       if (currentUser) {
-        userName = currentUser.name || 
-                  currentUser.username || 
-                  (typeof currentUser.email === "string" ? currentUser.email.split('@')[0] : "");
+        userName = currentUser.name;
       }
     }
   }
