@@ -1,58 +1,83 @@
 ---
-import Layout from '../../layouts/Layout.astro'
-import { requireAuth, getCurrentUser } from '../../../script/auth';
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/tailwind.css";
+import "../../styles/font.css";
+import Header from "../../components/Header.astro";
+import { requireAuth, getCurrentUser } from "../../../script/auth";
+import Fleche from "../../assets/icones/fleche-chat.svg";
 
-//const authCheck = await requireAuth(Astro);
-//if (authCheck) return authCheck;
+// const authCheck = await requireAuth(Astro);
+// if (authCheck) return authCheck;
 
-//const user = await getCurrentUser();
-
+// const user = await getCurrentUser();
 ---
-    <Layout>
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>Connexion - MMIA</title>
+    </head>
+        <Header></Header>
     <div class="min-h-screen flex flex-col bg-[var(--gris-anthracite)]">
         <!-- Chat messages area -->
         <div class="flex-1 p-4 sm:p-6 overflow-y-auto">
-            <h1 class="text-2xl font-bold mb-4 text-center">Discuter avec Ollama</h1>
-            <div id="response" class="mt-4 text-[var(--blanc-casse)] whitespace-pre-wrap max-w-4xl mx-auto"></div>
+            <h1 class="text-sm font-bold mb-4 text-center lg:text-2xl">
+                Bonjour je suis une IA qui a pour but de t’aider en <span
+                    class="text-(--violet)"
+                >
+                    MMI
+                </span>. Tu peux me demander ce que tu veux !
+            </h1>
+            <div
+                id="response"
+                class="mt-4 text-[var(--blanc-casse)] whitespace-pre-wrap max-w-4xl mx-auto"
+            >
+            </div>
         </div>
-        
+
         <!-- Fixed form at bottom -->
-        <div class="sticky bottom-0 bg-[var(--gris-anthracite)] border-t border-gray-600 p-4 sm:p-6">
-            <form id="chat-form" class="max-w-4xl mx-auto">
-                <div class="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                    <textarea
-                        id="message"
-                        rows="2"
-                        class="flex-1 p-3 border border-gray-300 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-[var(--violet)]"
-                        placeholder="Pose ta question..."
-                    ></textarea>
-                    <button
-                        type="submit"
-                        class="bg-[var(--violet)] hover:bg-purple-800 text-white font-semibold py-3 px-6 rounded-lg transition-colors sm:self-end whitespace-nowrap"
-                    >
-                        Envoyer
-                    </button>
-                </div>
-            </form>
+        <div
+    class="sticky bottom-0 bg-[var(--gris-anthracite)] border-t border-gray-600 p-4 sm:p-6"
+>
+    <form id="chat-form" class="max-w-4xl mx-auto">
+        <div
+            class="flex h-20 w-full justify-center items-center rounded-2xl bg-[var(--blanc-casse)] p-3"
+        >
+            <textarea
+                id="message"
+                rows="2"
+                class="text-[var(--gris-anthracite)] font-bold text-sm w-full border-none outline-none focus:ring-0 focus:outline-none resize-none flex items-center pt-2"
+                placeholder="Pose ta question..."></textarea>
+            <div class="">
+                <button type="submit" class="ml-auto">
+                    <Fleche />
+                </button>
+            </div>
         </div>
-
-    <script type="module">
-    const form = document.getElementById('chat-form');
-    const messageInput = document.getElementById('message');
-    const responseDiv = document.getElementById('response');
-
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const message = messageInput.value;
-        responseDiv.textContent = "⏳ Réponse en cours...";
-        const res = await fetch('/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message })
-        });
-        const data = await res.json();
-        responseDiv.textContent = data.response;
-    });
-    </script>
+    </form>
 </div>
-</Layout>
+
+        <script type="module">
+            const form = document.getElementById("chat-form");
+            const messageInput = document.getElementById("message");
+            const responseDiv = document.getElementById("response");
+
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const message = messageInput.value;
+                responseDiv.textContent = "⏳ Réponse en cours...";
+                const res = await fetch("/api/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message }),
+                });
+                const data = await res.json();
+                responseDiv.textContent = data.response;
+            });
+        </script>
+    </div>
+
