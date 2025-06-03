@@ -34,6 +34,7 @@
         <p>Vous devez être connecté pour accéder à cette page.</p>
         <a href="/Login">Se connecter</a>
     </div>
+    
     <a href="/">Menu</a>
 
     <script>
@@ -52,25 +53,37 @@
                 const user = getCurrentUser();
                 
                 // Cacher le loading
-                loading.style.display = 'none';
+                if (loading) {
+                    loading.style.display = 'none';
+                }
                 
                 // Afficher le contenu authentifié
-                authContent.style.display = 'block';
+                if (authContent) {
+                    authContent.style.display = 'block';
+                }
                 
                 // Remplir les infos utilisateur
-                document.querySelector('[data-user-name]').textContent = 
-                    user?.name || user?.email || 'Utilisateur';
+                const userNameElement = document.querySelector('[data-user-name]');
+                if (userNameElement) {
+                    userNameElement.textContent = 
+                        user?.name || user?.email || 'Utilisateur';
+                }
                 
-                document.getElementById('user-details').innerHTML = `
-                    <p><strong>Email :</strong> ${user?.email || 'N/A'}</p>
-                    <p><strong>Nom :</strong> ${user?.name || 'Non défini'}</p>
-                    <p><strong>ID :</strong> ${user?.id || 'N/A'}</p>
-                `;
+                const userDetailsElement = document.getElementById('user-details');
+                if (userDetailsElement) {
+                    userDetailsElement.innerHTML = `
+                        <p><strong>Email :</strong> ${user?.email || 'N/A'}</p>
+                        <p><strong>Nom :</strong> ${user?.name || 'Non défini'}</p>
+                        <p><strong>ID :</strong> ${user?.id || 'N/A'}</p>
+                    `;
+                }
                 
             } else {
                 // Pas connecté - rediriger vers login
-                loading.style.display = 'none';
-                window.location.href = '/login';
+                if (loading) {
+                    loading.style.display = 'none';
+                }
+                window.location.href = '/Login';
             }
         }
         
@@ -79,8 +92,8 @@
         
         // Réécouter les changements d'auth
         window.addEventListener('authStateChanged', (e) => {
-            if (!e.detail.isAuthenticated) {
-                window.location.href = '/login';
+            if (!(e as CustomEvent).detail.isAuthenticated) {
+                window.location.href = '/Login';
             }
         });
         
@@ -89,7 +102,7 @@
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => {
                 logout();
-                window.location.href = '/login';
+                window.location.href = '/Login';
             });
         }
     </script>

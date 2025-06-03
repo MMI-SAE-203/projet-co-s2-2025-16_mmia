@@ -46,7 +46,11 @@ export async function getPost(id){
 export async function getUser(id) {
     try {
         let data = await pb.collection('users').getOne(id);
-        data.img = pb.files.getURL(data, data.avatar);
+        if (data.avatar) {
+            data.img = pb.files.getURL(data, data.avatar);
+        } else {
+            data.img = null;
+        }
         return data;
     } catch (error) {
         console.log('Une erreur est survenue en lisant l\'utilisateur', error);
