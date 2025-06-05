@@ -1,37 +1,81 @@
 ---
-import { getPost, getUserbyPost } from "../../../backend/backend.mjs";
+import { getPost, getUserbyPost, getUsers, getUser, getPosts } from "../../../backend/backend.mjs";
 import Layout from "../../layouts/Layout.astro";
-import Picture from "astro/components/Picture.astro";
+import PocketBase from "pocketbase";
 
 const { id } = Astro.params;
-const post = await getPost(id);
+const cookieStr = Astro.cookies?.get("pb_auth")?.value;
+const post = await getPost(id, cookieStr);
 if (!post) {
     return Astro.redirect("/forum");
 }
-const userPost = await getUserbyPost(id);
+const userPost = await getUserbyPost(id, cookieStr);
 if (!userPost) {
     return Astro.redirect("/forum");
 }
 
-// console.log(post);
-console.log(userPost);
+// Vérifier si l'utilisateur connecté est loggé
+let isLoggedIn = false;
+let currentUser = null;
+if (cookieStr) {
+  const pb = new PocketBase("https://mmia.pauldarlef.fr:443");
+  pb.authStore.loadFromCookie(`pb_auth=${cookieStr}`);
+  if (pb.authStore.isValid && pb.authStore.model) {
+    isLoggedIn = true;
+    currentUser = pb.authStore.model;
+  }
+}
+
+// Gestion de la soumission d'un commentaire
+let commentMessage = "";
+if (Astro.request.method === "POST" && isLoggedIn) {
+  const formData = await Astro.request.formData();
+  const commentText = formData.get("commentaire")?.toString();
+  if (commentText && commentText.trim().length > 0) {
+    try {
+      const pb = new PocketBase("https://mmia.pauldarlef.fr:443");
+      pb.authStore.loadFromCookie(`pb_auth=${cookieStr}`);
+      await pb.collection("commentaire").create({
+        post: id,
+        user: currentUser.id,
+        text: commentText
+      });
+      commentMessage = "Commentaire ajouté !";
+    } catch (e) {
+      commentMessage = "Erreur lors de l'ajout du commentaire.";
+    }
+  } else if (formData.has("commentaire")) {
+    commentMessage = "Le commentaire ne peut pas être vide.";
+  }
+}
+
+// Récupérer les commentaires du post
+let commentaires = [];
+try {
+  const pb = new PocketBase("https://mmia.pauldarlef.fr:443");
+  if (cookieStr) pb.authStore.loadFromCookie(`pb_auth=${cookieStr}`);
+  commentaires = await pb.collection("commentaire").getFullList({
+    filter: `post="${id}"`,
+    expand: "user"
+  });
+} catch (e) {
+  commentaires = [];
+}
 ---
 
 <Layout titre={post.Titre}>
     <div class="w-11/12 mx-auto space-y-8">
         <div class="bg-[var(--blanc-casse)] rounded-sm shadow-lg p-6 mt-20">
             <div class="flex items-start justify-between mb-6">
-                <div
-                    class="flex items-center space-x-3 lg:flex-col text-center"
-                >
+                <div class="flex items-center space-x-3 lg:flex-col text-center">
                     <div class="w-24 h-24 rounded-full overflow-hidden">
-                        <a href=`/Profil/${userPost.id}`
-                            ><img
+                        <a href={`/Profil/${userPost.id}`}>
+                            <img
                                 src={userPost.img}
                                 alt={userPost.img}
                                 class="w-full h-full object-cover rounded-full"
-                            /></a
-                        >
+                            />
+                        </a>
                     </div>
                     <div>
                         <h3 class="font-semibold text-gray-800">
@@ -41,7 +85,6 @@ console.log(userPost);
                         <p class="text-sm text-gray-500">15h21</p>
                     </div>
                 </div>
-
                 <div class="flex items-center space-x-3">
                     <button class="text-gray-400 hover:text-gray-600">
                         <svg
@@ -80,5 +123,43 @@ console.log(userPost);
                 />
             </div>
         </div>
-    </div></Layout
->
+
+        <div class="bg-white rounded shadow p-6 mt-8">
+            <h3 class="text-lg font-bold mb-4 text-[var(--violet)]">Commentaires</h3>
+            {commentaires.length === 0 && (
+              <div class="text-gray-500 text-center mb-4">Aucun commentaire pour ce post.</div>
+            )}
+            <ul class="space-y-4">
+              {commentaires.map((c) => (
+                <li class="border-b pb-2">
+                  <div class="flex items-center gap-2">
+                    <span class="font-semibold text-[var(--violet)]">{c.expand?.user?.Pseudo || c.expand?.user?.username || c.expand?.user?.email || "Utilisateur"}</span>
+                    <span class="text-xs text-gray-400">{c.created?.slice(0, 16).replace("T", " ")}</span>
+                  </div>
+                  <div class="ml-2 text-gray-700">{c.text}</div>
+                </li>
+              ))}
+            </ul>
+            {isLoggedIn ? (
+              <form method="POST" class="mt-6 flex flex-col gap-2">
+                {commentMessage && <div class="text-center text-red-500">{commentMessage}</div>}
+                <textarea
+                  name="commentaire"
+                  rows="2"
+                  placeholder="Votre commentaire..."
+                  class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--violet)]"
+                  required
+                ></textarea>
+                <button
+                  type="submit"
+                  class="self-end bg-[var(--violet)] text-white px-4 py-2 rounded hover:bg-purple-700 transition"
+                >
+                  Répondre
+                </button>
+              </form>
+            ) : (
+              <div class="text-center text-gray-500 mt-6">Connectez-vous pour répondre.</div>
+            )}
+        </div>
+    </div>
+</Layout>
