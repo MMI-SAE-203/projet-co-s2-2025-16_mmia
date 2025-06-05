@@ -1,38 +1,45 @@
 import PocketBase from 'pocketbase'
-const pb = new PocketBase('https://mmia.pauldarlef.fr:443') ;
-//https://mmia.pauldarlef.fr:443
-//http://127.0.0.1:8090
 
+// Utilitaire pour obtenir une instance PocketBase avec le cookie d'auth
+function getPb(cookieStr) {
+    const pb = new PocketBase('https://mmia.pauldarlef.fr:443');
+    if (cookieStr) {
+        pb.authStore.loadFromCookie(`pb_auth=${cookieStr}`);
+    }
+    return pb;
+}
 
 //ajout / suppression / mise à jour d'un post
-export async function addNewPost(Post){
+export async function addNewPost(Post, cookieStr) {
+    const pb = getPb(cookieStr);
     await pb.collection('post').create(Post);
 }
 
-export async function DeletePostById(id){
+export async function DeletePostById(id, cookieStr) {
+    const pb = getPb(cookieStr);
     await pb.collection('post').delete(id);
 }
 
-export async function updatePostById(id, Post){
+export async function updatePostById(id, Post, cookieStr) {
+    const pb = getPb(cookieStr);
     await pb.collection('post').update(id, Post);
 }
 
 //section Vue
-export async function getPosts(){
+export async function getPosts(cookieStr) {
+    const pb = getPb(cookieStr);
     try {
         let data = await pb.collection('post').getFullList({
             sort: '+Nb_Fav',
-    });
-    data = data.map((item) => {
-        return item;
-     });
-    return data;
+        });
+        return data;
     } catch(error){
         console.log("Une erreur est survenue en lisant la liste des posts", error);
     }
 }
 
-export async function getPost(id){
+export async function getPost(id, cookieStr) {
+    const pb = getPb(cookieStr);
     try {
         let data = await pb.collection('post').getOne(id);
         return data;
@@ -42,8 +49,8 @@ export async function getPost(id){
     }
 }
 
-
-export async function getUser(id) {
+export async function getUser(id, cookieStr) {
+    const pb = getPb(cookieStr);
     try {
         let data = await pb.collection('users').getOne(id);
         if (data.avatar) {
@@ -58,18 +65,19 @@ export async function getUser(id) {
     }
 }
 
-export async function getUsers() {
+export async function getUsers(cookieStr) {
+    const pb = getPb(cookieStr);
     try {
         const userrecords = await pb.collection('users').getFullList();
         return userrecords;
     } catch (error) {
         console.log('Une erreur est survenue en lisant la liste des utilisateurs', error);
-        return (e);
+        return error;
     }
 }
 
-
-export async function getUserbyPost(id){
+export async function getUserbyPost(id, cookieStr) {
+    const pb = getPb(cookieStr);
     try {
         let userpost = await pb.collection('post').getOne(id, {expand: 'user'});
         if (userpost.expand && userpost.expand.user && userpost.expand.user.avatar) {
@@ -82,13 +90,10 @@ export async function getUserbyPost(id){
     }
 }
 
-
 export async function login(email, password) {
+    const pb = new PocketBase('https://mmia.pauldarlef.fr:443');
     try {
-        // Attempt authentication with PocketBase
         const authData = await pb.collection('users').authWithPassword(email, password);
-        
-        // Return the auth data which contains user and token information
         return {
             success: true,
             user: authData.record,
@@ -103,7 +108,8 @@ export async function login(email, password) {
     }
 }
 
-export async function  register() {
+export async function register() {
+    const pb = new PocketBase('https://mmia.pauldarlef.fr:443');
     await pb.collection('users').create({
         email: document.getElementById("login").value,
         password: document.getElementById("passwd").value,

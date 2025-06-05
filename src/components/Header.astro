@@ -1,26 +1,18 @@
 ---
 import Logo from "../assets/icones/mmi-white.svg";
-import { isAuthenticated, getCurrentUser } from "../../script/auth.js";
+import PocketBase from 'pocketbase';
 
-// Check authentication status - utiliser une approche sécurisée pour éviter les erreurs
-let isLoggedIn = false;
-let userName = ""; // Valeur par défaut
+let userId = null;
+let userName = "";
 
-try {
-  // Utiliser uniquement côté client
-  if (typeof window !== "undefined") {
-    isLoggedIn = isAuthenticated();
-    if (isLoggedIn) {
-      const currentUser = getCurrentUser();
-      if (currentUser) {
-        userName = currentUser.name;
-      }
-    }
+const cookieStr = Astro.cookies?.get("pb_auth")?.value;
+if (cookieStr) {
+  const pb = new PocketBase("https://mmia.pauldarlef.fr:443");
+  pb.authStore.loadFromCookie(`pb_auth=${cookieStr}`);
+  if (pb.authStore.isValid && pb.authStore.model) {
+    userId = pb.authStore.model.id;
+    userName = pb.authStore.model.Pseudo || pb.authStore.model.username || pb.authStore.model.name || (pb.authStore.model.email ? pb.authStore.model.email.split('@')[0] : "");
   }
-} catch (error) {
-  console.error("Error checking authentication status:", error);
-  isLoggedIn = false;
-  userName = "";
 }
 ---
 
@@ -36,48 +28,36 @@ try {
   <nav class="hidden lg:flex flex-1 justify-center">
     <ul class="flex items-start gap-8 ">
       <li>
-        <a
-          class="block p-4 text-xl hover:text-[var(--violet)] transition-colors"
-          href="/">Accueil</a
-        >
+        <a class="block p-4 text-xl hover:text-[var(--violet)] transition-colors" href="/">Accueil</a>
       </li>
       
       <li>
-        <a
-          class="block p-4 text-xl hover:text-[var(--violet)] transition-colors"
-          href="/forum">Forum</a
-        >
+        <a class="block p-4 text-xl hover:text-[var(--violet)] transition-colors" href="/forum">Forum</a>
       </li>
       <li>
-        <a
-          class="block p-4 text-xl hover:text-[var(--violet)] transition-colors"
-          href="/Contact">Contactez nous</a
-        >
+        <a class="block p-4 text-xl hover:text-[var(--violet)] transition-colors" href="/Contact">Contactez nous</a>
       </li>
     </ul>
   </nav>
 
   <div class="hidden lg:flex items-center gap-4 flex-shrink-0" id="auth-container">
-    <a
-      href="/Login"
-      class="block p-2 text-xl hover:text-[var(--violet)] transition-colors auth-guest"
-    >
-      Connexion
-    </a>
-    <a
-      href="/Register"
-      class="block p-2 text-xl hover:text-[var(--violet)] transition-colors auth-guest"
-    >
-      Inscription
-    </a>
-    <span class="block p-2 text-xl auth-user hidden" id="username-display"></span>
-    <button
-      id="logout-btn"
-      class="block p-2 text-xl hover:text-[var(--violet)] transition-colors cursor-pointer auth-user hidden"
-    >
-      Déconnexion
-    </button>
-
+    {userId ? (
+      <>
+        <a href={`/Profil/${userId}`} class="block p-2 text-xl hover:text-[var(--violet)] transition-colors">
+          {userName ? `Profil (${userName})` : "Profil"}
+        </a>
+        <form method="POST" action="/Logout" style="display:inline;">
+          <button type="submit" class="block p-2 text-xl hover:text-[var(--violet)] transition-colors cursor-pointer">
+            Déconnexion
+          </button>
+        </form>
+      </>
+    ) : (
+      <>
+        <a href="/Login" class="block p-2 text-xl hover:text-[var(--violet)] transition-colors">Connexion</a>
+        <a href="/Register" class="block p-2 text-xl hover:text-[var(--violet)] transition-colors">Inscription</a>
+      </>
+    )}
     <label
       id="themeToggle"
       class="inline-flex items-center relative cursor-pointer"
@@ -189,79 +169,3 @@ try {
     </div>
   </nav>
 </header>
-
-<script>
-  import { logout, isAuthenticated, getCurrentUser, initAuth } from "../../script/auth.js";
-  
-  document.addEventListener('DOMContentLoaded', () => {
-    // Initialiser l'authentification
-    initAuth();
-    
-    // Menu mobile
-    const toggle = document.querySelector("#menu-btn");
-    const nav = document.querySelector("#menu");
-    const page = document.body;
-
-    if (toggle && nav) {
-      toggle.addEventListener("click", () => {
-        const isOpen = toggle.ariaExpanded === "true";
-        const isClosed = !isOpen;
-        toggle.ariaExpanded = String(isClosed);
-        nav.ariaHidden = String(isOpen);
-        page.classList.toggle("noscroll", isClosed);
-      });
-    }
-    
-    // Mise à jour de l'interface selon l'état d'authentification
-    function updateAuthUI() {
-      const isLoggedIn = isAuthenticated();
-      
-      // Éléments à afficher quand connecté
-      document.querySelectorAll('.auth-user').forEach(el => {
-        el.classList.toggle('hidden', !isLoggedIn);
-      });
-      
-      // Éléments à afficher quand déconnecté
-      document.querySelectorAll('.auth-guest').forEach(el => {
-        el.classList.toggle('hidden', isLoggedIn);
-      });
-      
-      // Mettre à jour le nom d'utilisateur si connecté
-      if (isLoggedIn) {
-        const currentUser = getCurrentUser();
-        if (currentUser) {
-          const displayName = currentUser.name || 
-                              currentUser.username || 
-                              (currentUser.email ? currentUser.email.split('@')[0] : "");
-          
-          document.querySelectorAll('#username-display, #username-display-mobile').forEach(el => {
-            el.textContent = displayName;
-          });
-        }
-      }
-    }
-    
-    // Vérifier l'état initial d'authentification
-    setTimeout(updateAuthUI, 100); // Petit délai pour s'assurer que PocketBase est initialisé
-    
-    // Écouter les changements d'état d'authentification
-    window.addEventListener('authStateChanged', updateAuthUI);
-    
-    // Gestion de la déconnexion
-    function handleLogout() {
-      logout();
-      window.location.href = "/";
-    }
-    
-    const logoutBtn = document.getElementById("logout-btn");
-    const logoutBtnMobile = document.getElementById("logout-btn-mobile");
-    
-    if (logoutBtn) {
-      logoutBtn.addEventListener("click", handleLogout);
-    }
-    
-    if (logoutBtnMobile) {
-      logoutBtnMobile.addEventListener("click", handleLogout);
-    }
-  });
-</script>
