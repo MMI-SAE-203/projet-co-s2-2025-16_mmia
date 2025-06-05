@@ -3,6 +3,9 @@ import Layout from "../layouts/Layout.astro";
 import MMIA from "../assets/icones/mmi-white.svg";
 import Fleche from "../assets/icones/fleche.svg";
 import Paperclip from "../assets/icones/paperclip.svg";
+import img1 from "/src/assets/images/accueil1.webp";
+import img2 from "/src/assets/images/accueil2.webp";
+import img3 from "/src/assets/images/accueil3.webp";
 ---
 
 
@@ -44,8 +47,8 @@ import Paperclip from "../assets/icones/paperclip.svg";
           <div class="items-center lg:flex flex-row m-2 sm:m-3 lg:m-4">
             <img
               class="rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-10"
-              src="/src/assets/images/accueil1.webp"
-              alt=""
+              src={img1.src}
+              alt="image d'accueil avec un cahier et des ecritures"
             />
             <p class="text-center px-4 text-base sm:text-lg">
               Grâce à notre IA spécialisée dans les cours de MMI, entrez dans un
@@ -66,8 +69,8 @@ import Paperclip from "../assets/icones/paperclip.svg";
              <div class="lg:flex flex-row-reverse items-center m-2 sm:m-3 lg:m-4">
                <img
                  class="rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-10"
-                 src="/src/assets/images/accueil2.webp"
-                 alt=""
+                 src={img2.src}
+                 alt="deuxieme image d'accueil avec des personnes qui discutent"
                />
                <p class="text-center px-4 text-base sm:text-lg">
                  Découvrez toute une communauté solidaire constituée d'étudiants en
@@ -88,8 +91,8 @@ import Paperclip from "../assets/icones/paperclip.svg";
             <div class="items-center lg:flex flex-row m-2 sm:m-3 lg:m-4">
               <img
                 class="rounded-3xl bg-[var(--blanc-casse)] lg:h-160 w-200 border-10"
-                src="/src/assets/images/accueil3.webp"
-                alt=""
+                src={img3.src}
+                alt="troisieme image d'accueil une femme dans une bibliotheque"
               />
               <p class="text-center px-4 text-base sm:text-lg">
                 Apprenez à travailler au mieux en MMI grâce à MMIA
