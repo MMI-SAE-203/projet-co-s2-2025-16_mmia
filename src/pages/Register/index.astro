@@ -3,6 +3,66 @@ import Layout from "../../layouts/Layout.astro";
 import "../../styles/tailwind.css";
 import "../../styles/font.css";
 import Logo from "../../assets/icones/mmi-white.svg";
+
+let errorMessage = '';
+
+if (Astro.request.method === "POST") {
+  try {
+    const data = await Astro.request.formData();
+    const email = data.get("email")?.toString();
+    const password = data.get("password")?.toString();
+    const passwordConfirm = data.get("passwordConfirm")?.toString();
+    const age = data.get("age")?.toString();
+    const pseudo = data.get("pseudo")?.toString();
+    const nom = data.get("nom")?.toString();
+    const prenom = data.get("prenom")?.toString();
+    const specialite = data.get("specialite")?.toString();
+    // avatar is optional
+
+    if (!email || !password || !passwordConfirm || !age || !pseudo || !nom || !prenom || !specialite) {
+      errorMessage = "Tous les champs sont obligatoires.";
+    } else if (password !== passwordConfirm) {
+      errorMessage = "Les mots de passe ne correspondent pas.";
+    } else {
+      const { default: PocketBase } = await import('pocketbase');
+      const pb = new PocketBase("https://mmia.pauldarlef.fr:443");
+      try {
+        const user = await pb.collection('users').create({
+          email,
+          password,
+          passwordConfirm,
+          age: Number(age),
+          Pseudo: pseudo,
+          nom,
+          prenom,
+          specialite,
+          // avatar: not required
+        });
+        await pb.collection('users').authWithPassword(email, password);
+        const cookieData = pb.authStore.exportToCookie({
+          secure: true,
+          sameSite: "Lax",
+          path: "/"
+        });
+        return new Response("", {
+          status: 302,
+          headers: {
+            "Location": "/",
+            "Set-Cookie": cookieData
+          }
+        });
+      } catch (err) {
+        if (err?.response?.data?.email?.message) {
+          errorMessage = "Cet email est déjà utilisé.";
+        } else {
+          errorMessage = "Erreur lors de l'inscription.";
+        }
+      }
+    }
+  } catch (error) {
+    errorMessage = "Erreur technique, veuillez réessayer.";
+  }
+}
 ---
 
 <!doctype html>
@@ -14,125 +74,120 @@ import Logo from "../../assets/icones/mmi-white.svg";
         <meta name="generator" content={Astro.generator} />
         <title>Astro Basics</title>
     </head>
-
-    <body
-        class=" from-[var(--gris-anthracite)] to-[var(violet)] flex items-center justify-center  relative overflow-hidden"
-    >
-    
-        <div class="hidden md:block w-full">
-           
-            <div
-                class="absolute w-96 h-96 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full opacity-80 -top-48 -left-48"
-            >
-            </div>
-            <div
-                class="absolute w-80 h-80 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full opacity-70 -bottom-40 -right-40"
-            >
-            </div>
-
-            
-            <div class="flex items-center justify-center min-h-screen">
-                <div
-                    class="w-full max-w-2xl p-8 bg-[var(--gris-anthracite)] shadow-2xl border-3 border-[var(--violet)] relative z-10"
-                >
-                    <div class="flex justify-center mb-8">
-                        <a href="/"><Logo/></a>
-                    </div>
-
-                    <h2 class="text-white text-4xl font-semibold text-center mb-8">
-                        Inscription
-                    </h2>
-
-                    <form class="space-y-6">
+    <body class="from-[var(--gris-anthracite)] to-[var(violet)] flex items-center justify-center relative overflow-hidden">
+        <div class="hidden md:flex w-full min-h-screen items-center justify-center">
+            <div class="absolute w-96 h-96 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full opacity-80 -top-48 -left-48"></div>
+            <div class="absolute w-80 h-80 bg-gradient-to-br from-purple-500 to-purple-400 rounded-full opacity-70 -bottom-40 -right-40"></div>
+            <div class="w-full max-w-lg p-8 bg-[var(--gris-anthracite)] shadow-2xl border-3 border-[var(--violet)] rounded-2xl relative z-10 flex flex-col items-center">
+                <div class="flex justify-center mb-8">
+                    <a href="/"><Logo/></a>
+                </div>
+                <h2 class="text-white text-3xl font-semibold text-center mb-8">
+                    Inscription
+                </h2>
+                <form class="space-y-4 w-full" method="POST">
+                    {errorMessage && (
+                      <div class="text-red-500 text-center mb-4">{errorMessage}</div>
+                    )}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-gray-300 text-sm mb-2">Adresse mail</label>
                             <input
                                 type="email"
+                                name="email"
                                 placeholder="bob@gmail.com"
-                                class="w-full px-4 py-3 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                class="w-full px-4 py-2 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                required
                             />
                         </div>
-
+                        <div>
+                            <label class="block text-gray-300 text-sm mb-2">Pseudo</label>
+                            <input
+                                type="text"
+                                name="pseudo"
+                                placeholder="Votre pseudo"
+                                class="w-full px-4 py-2 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 text-sm mb-2">Nom</label>
+                            <input
+                                type="text"
+                                name="nom"
+                                placeholder="Votre nom"
+                                class="w-full px-4 py-2 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 text-sm mb-2">Prénom</label>
+                            <input
+                                type="text"
+                                name="prenom"
+                                placeholder="Votre prénom"
+                                class="w-full px-4 py-2 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 text-sm mb-2">Âge</label>
+                            <input
+                                type="number"
+                                name="age"
+                                min="16"
+                                max="100"
+                                placeholder="Votre âge"
+                                class="w-full px-4 py-2 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 text-sm mb-2">Spécialité</label>
+                            <select
+                                name="specialite"
+                                class="w-full px-4 py-2 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                required
+                            >
+                                <option value="">Choisissez une spécialité</option>
+                                <option value="Design">Design</option>
+                                <option value="Developpement">Développement</option>
+                                <option value="Communication">Communication</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-gray-300 text-sm mb-2">Mot de passe</label>
                             <input
                                 type="password"
+                                name="password"
                                 placeholder="XXXXXXX"
-                                class="w-full px-4 py-3 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                class="w-full px-4 py-2 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                required
                             />
                         </div>
-
                         <div>
                             <label class="block text-gray-300 text-sm mb-2">Confirmez votre mot de passe</label>
                             <input
                                 type="password"
+                                name="passwordConfirm"
                                 placeholder="XXXXXXX"
-                                class="w-full px-4 py-3 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                class="w-full px-4 py-2 bg-gray-700 bg-opacity-80 border border-white border-opacity-20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:bg-opacity-90 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-20 transition-all duration-300"
+                                required
                             />
                         </div>
-
-                        <div class="border-t border-gray-600 my-8"></div>
-
-                        <button
-                            type="submit"
-                            class="w-full py-3 bg-[var(--violet)] rounded-lg text-white font-medium focus:outline-none hover:from-purple-600 hover:to-purple-500 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 transform"
-                        >
-                            Inscription
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            
-            <div class="absolute bottom-5 right-5">
-                <div class="relative">
-                    <input
-                        type="checkbox"
-                        id="toggle"
-                        class="sr-only"
-                        onchange="toggleTheme()"
-                    />
-                    <label
-                        id="themeToggle"
-                        class="inline-flex items-center relative cursor-pointer"
+                    </div>
+                    <div class="border-t border-gray-600 my-8"></div>
+                    <button
+                        type="submit"
+                        class="w-full py-3 bg-[var(--violet)] rounded-lg text-white font-medium focus:outline-none hover:from-purple-600 hover:to-purple-500 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-purple-500/30 transition-all duration-300 transform"
                     >
-                        <input class="peer hidden" id="toggle" type="checkbox" />
-                        <div
-                            class="relative w-[110px] h-[50px] bg-white peer-checked:bg-zinc-500 rounded-full border-2 border-gray-700 peer-checked:border-gray-700 hover:shadow-lg transition-shadow duration-300 after:absolute after:content-[''] after:w-[40px] after:h-[40px] after:bg-gradient-to-r from-orange-500 to-yellow-400 peer-checked:after:from-zinc-900 peer-checked:after:to-zinc-900 after:rounded-full after:top-[5px] after:left-[5px] active:after:w-[50px] peer-checked:after:left-[105px] peer-checked:after:translate-x-[-100%] shadow-sm duration-300 after:duration-300 after:shadow-md peer-focus-visible:ring-2 peer-focus-visible:ring-blue-500 peer-focus-visible:ring-offset-2"
-                        >
-                        </div>
-                        <svg
-                            height="0"
-                            width="100"
-                            viewBox="0 0 24 24"
-                            data-name="Layer 1"
-                            id="Layer_1"
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="fill-purple-500 opacity-80 peer-checked:opacity-100 peer-checked:fill-purple-400 absolute w-6 h-6 left-[13px]"
-                        >
-                            <path
-                                d="M12,17c-2.76,0-5-2.24-5-5s2.24-5,5-5,5,2.24,5,5-2.24,5-5,5ZM13,0h-2V5h2V0Zm0,19h-2v5h2v-5ZM5,11H0v2H5v-2Zm19,0h-5v2h5v-2Zm-2.81-6.78l-1.41-1.41-3.54,3.54,1.41,1.41,3.54-3.54ZM7.76,17.66l-1.41-1.41-3.54,3.54,1.41,1.41,3.54-3.54Zm0-11.31l-3.54-3.54-1.41,1.41,3.54,3.54,1.41-1.41Zm13.44,13.44l-3.54-3.54-1.41,1.41,3.54,3.54,1.41-1.41Z"
-                            ></path>
-                        </svg>
-                        <svg
-                            height="512"
-                            width="512"
-                            viewBox="0 0 24 24"
-                            data-name="Layer 1"
-                            id="Layer_1"
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="fill-purple-500 opacity-80 peer-checked:opacity-100 peer-checked:fill-purple-400 absolute w-6 h-6 right-[13px]"
-                        >
-                            <path
-                                d="M12.009,24A12.067,12.067,0,0,1,.075,10.725,12.121,12.121,0,0,1,10.1.152a13,13,0,0,1,5.03.206,2.5,2.5,0,0,1,1.8,1.8,2.47,2.47,0,0,1-.7,2.425c-4.559,4.168-4.165,10.645.807,14.412h0a2.5,2.5,0,0,1-.7,4.319A13.875,13.875,0,0,1,12.009,24Zm.074-22a10.776,10.776,0,0,0-1.675.127,10.1,10.1,0,0,0-8.344,8.8A9.928,9.928,0,0,0,4.581,18.7a10.473,10.473,0,0,0,11.093,2.734.5.5,0,0,0,.138-.856h0C9.883,16.1,9.417,8.087,14.865,3.124a.459.459,0,0,0,.127-.465.491.491,0,0,0-.356-.362A10.68,10.68,0,0,0,12.083,2ZM20.5,12a1,1,0,0,1-.97-.757l-.358-1.43L17.74,9.428a1,1,0,0,1,.035-1.94l1.4-.325.351-1.406a1,1,0,0,1,1.94,0l.355,1.418,1.418.355a1,1,0,0,1,0,1.94l-1.418.355-.355,1.418A1,1,0,0,1,20.5,12ZM16,14a1,1,0,0,0,2,0A1,1,0,0,0,16,14Zm6,4a1,1,0,0,0,2,0A1,1,0,0,0,22,18Z"
-                            ></path>
-                        </svg>
-                    </label>
-                </div>
+                        Inscription
+                    </button>
+                </form>
             </div>
         </div>
-
-        
         <div class="md:hidden min-h-screen w-full bg-[var(--gris-anthracite)] flex flex-col">
             
             <div class="flex justify-center pt-8 pb-6">
@@ -147,37 +202,109 @@ import Logo from "../../assets/icones/mmi-white.svg";
                     Inscription
                 </h2>
 
-                <form class="space-y-4">
+                <form class="space-y-4" method="POST">
+                    {errorMessage && (
+                      <div class="text-red-500 text-center mb-4">{errorMessage}</div>
+                    )}
                     <div>
                         <label class="block text-gray-300 text-sm mb-2">
                             Adresse mail
                         </label>
                         <input
                             type="email"
+                            name="email"
                             placeholder="bob@gmail.com"
                             class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-300"
+                            required
                         />
                     </div>
-
+                    <div>
+                        <label class="block text-gray-300 text-sm mb-2">
+                            Pseudo
+                        </label>
+                        <input
+                            type="text"
+                            name="pseudo"
+                            placeholder="Votre pseudo"
+                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-300"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 text-sm mb-2">
+                            Nom
+                        </label>
+                        <input
+                            type="text"
+                            name="nom"
+                            placeholder="Votre nom"
+                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-300"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 text-sm mb-2">
+                            Prénom
+                        </label>
+                        <input
+                            type="text"
+                            name="prenom"
+                            placeholder="Votre prénom"
+                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-300"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 text-sm mb-2">
+                            Âge
+                        </label>
+                        <input
+                            type="number"
+                            name="age"
+                            min="16"
+                            max="100"
+                            placeholder="Votre âge"
+                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-300"
+                            required
+                        />
+                    </div>
+                    <div>
+                        <label class="block text-gray-300 text-sm mb-2">
+                            Spécialité
+                        </label>
+                        <select
+                            name="specialite"
+                            class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:bg-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-300"
+                            required
+                        >
+                            <option value="">Choisissez une spécialité</option>
+                            <option value="Design">Design</option>
+                            <option value="Developpement">Développement</option>
+                            <option value="Communication">Communication</option>
+                        </select>
+                    </div>
                     <div>
                         <label class="block text-gray-300 text-sm mb-2">
                             Mot de passe
                         </label>
                         <input
                             type="password"
+                            name="password"
                             placeholder="XXXXXXX"
                             class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-300"
+                            required
                         />
                     </div>
-
                     <div>
                         <label class="block text-gray-300 text-sm mb-2">
                             Confirmez votre mot de passe
                         </label>
                         <input
                             type="password"
+                            name="passwordConfirm"
                             placeholder="XXXXXXX"
                             class="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:bg-gray-600 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 transition-all duration-300"
+                            required
                         />
                     </div>
 
