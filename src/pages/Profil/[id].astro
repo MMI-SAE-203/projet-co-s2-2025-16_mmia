@@ -1,19 +1,62 @@
 ---
 import Layout from "../../layouts/Layout.astro";
-import { getUser } from "../../../backend/backend.mjs";
+import { getUser, updatePostById } from "../../../backend/backend.mjs";
+import PocketBase from "pocketbase";
 const { id } = Astro.params;
-const user = await getUser(id);
+const cookieStr = Astro.cookies?.get("pb_auth")?.value;
+const user = await getUser(id, cookieStr);
 
-console.log(user);
+let isOwner = false;
+let updateMessage = "";
+
+if (cookieStr) {
+  const pb = new PocketBase("https://mmia.pauldarlef.fr:443");
+  pb.authStore.loadFromCookie(`pb_auth=${cookieStr}`);
+  if (pb.authStore.isValid && pb.authStore.model && pb.authStore.model.id === id) {
+    isOwner = true;
+  }
+}
+
+// Traitement du formulaire de modification
+if (Astro.request.method === "POST" && isOwner) {
+  const formData = await Astro.request.formData();
+  const pseudo = formData.get("pseudo")?.toString();
+  const nom = formData.get("nom")?.toString();
+  const prenom = formData.get("prenom")?.toString();
+  const age = formData.get("age")?.toString();
+  const specialite = formData.get("specialite")?.toString();
+  const avatarFile = formData.get("avatar");
+
+  try {
+    const pb = new PocketBase("https://mmia.pauldarlef.fr:443");
+    pb.authStore.loadFromCookie(`pb_auth=${cookieStr}`);
+    const updateData = {
+      Pseudo: pseudo,
+      nom,
+      prenom,
+      age: age ? Number(age) : undefined,
+      specialite,
+    };
+    if (avatarFile && avatarFile.size > 0) {
+      updateData.avatar = avatarFile;
+    }
+    await pb.collection("users").update(id, updateData);
+    updateMessage = "Profil mis à jour !";
+    // Recharger les infos utilisateur après update
+    Object.assign(user, await getUser(id, cookieStr));
+  } catch (e) {
+    updateMessage = "Erreur lors de la mise à jour du profil.";
+  }
+}
 ---
-<!-- {user.nom} {user.prenom} {user.img} {user.specialite} {user.Pseudo} {user.age} {user.email} -->
+
 <Layout>
     <h1 class="text-center text-5xl my-10"> Profil</h1>
     <div class="flex gap-5 justify-center">
-        <!--img src={user.img} class="rounded-full h-20 w-20" alt=""> -->
+        {user.img && <img src={user.img} class="rounded-full h-20 w-20" alt="avatar" />}
         <div class="flex flex-col items-center ">
         <p>Pseudo : {user?.Pseudo}</p>
-        <p>E-mail {user?.email}</p>
+        <p>E-mail : {user?.email}</p>
         </div>
     </div>
 
@@ -29,6 +72,45 @@ console.log(user);
     <div class="mt-20 flex justify-center ">
         <hr class="w-100 border-2 border-(--violet)">
     </div>
+
+    {isOwner && (
+      <div class="max-w-lg mx-auto mt-10 bg-[var(--blanc-casse)] rounded-2xl shadow-lg border-2 border-[var(--violet)] p-8">
+        <h2 class="text-2xl font-bold mb-4 text-center text-[var(--violet)]">Modifier mon profil</h2>
+        {updateMessage && <div class="text-center text-green-600 mb-4">{updateMessage}</div>}
+        <form method="POST" enctype="multipart/form-data" class="space-y-4">
+          <div>
+            <label class="block text-gray-700 text-sm mb-2">Pseudo</label>
+            <input type="text" name="pseudo" value={user?.Pseudo} class="w-full px-4 py-2 border rounded" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm mb-2">Nom</label>
+            <input type="text" name="nom" value={user?.nom} class="w-full px-4 py-2 border rounded" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm mb-2">Prénom</label>
+            <input type="text" name="prenom" value={user?.prenom} class="w-full px-4 py-2 border rounded" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm mb-2">Âge</label>
+            <input type="number" name="age" min="16" max="100" value={user?.age} class="w-full px-4 py-2 border rounded" required />
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm mb-2">Spécialité</label>
+            <select name="specialite" class="w-full px-4 py-2 border rounded" required>
+              <option value="">Choisissez une spécialité</option>
+              <option value="Design" selected={user?.specialite === "Design"}>Design</option>
+              <option value="Developpement" selected={user?.specialite === "Developpement"}>Développement</option>
+              <option value="Communication" selected={user?.specialite === "Communication"}>Communication</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-gray-700 text-sm mb-2">Image de profil (avatar)</label>
+            <input type="file" name="avatar" accept="image/*" class="w-full" />
+          </div>
+          <button type="submit" class="w-full py-2 bg-[var(--violet)] text-white rounded font-bold mt-4">Enregistrer</button>
+        </form>
+      </div>
+    )}
 
     <p class="text-3xl text-center my-20">Type d'abonnement</p>
     <div class="flex justify-center ">
