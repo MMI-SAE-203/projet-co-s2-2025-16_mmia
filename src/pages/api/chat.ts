@@ -17,7 +17,7 @@ async function sendMessageToOllama(message) {
         'Content-Type': 'application/json',
         'Accept-Charset': 'utf-8',
       },
-      signal: AbortSignal.timeout(120000),
+      signal: AbortSignal.timeout(1200000),
       body: JSON.stringify({
         model: "llama3.2",
         system: "Tu es un assistant IA spécialisé en MMI (Métiers du Multimédia et de l'Internet). Tu aides les étudiants avec leurs cours, projets et questions techniques. Réponds de manière pédagogique et adaptée, ainsi que de façon concise et claire.",
