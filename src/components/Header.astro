@@ -147,25 +147,33 @@ if (cookieStr) {
     </ul>
 
     <div class="flex flex-col items-center gap-4 mt-8" id="auth-container-mobile">
-      <a
-        href="/Login"
-        class="block p-4 rounded-lg text-(--blanc-casse) text-xl hover:bg-gray-800 transition-colors auth-guest"
-      >
-        Connexion
-      </a>
-      <a
-        href="/Register"
-        class="block p-4 rounded-lg text-(--blanc-casse) text-xl hover:bg-gray-800 transition-colors auth-guest"
-      >
-        Inscription
-      </a>
-      <span class="block p-4 rounded-lg text-(--blanc-casse) text-xl auth-user hidden" id="username-display-mobile"></span>
-      <button
-        id="logout-btn-mobile"
-        class="block p-4 rounded-lg text-(--blanc-casse) text-xl hover:bg-gray-800 transition-colors cursor-pointer auth-user hidden"
-      >
-        Déconnexion
-      </button>
+      {userId ? (
+        <>
+          <a href={`/Profil/${userId}`} class="block p-4 rounded-lg text-(--blanc-casse) text-xl hover:bg-gray-800 transition-colors">
+            {userName ? `Profil (${userName})` : "Profil"}
+          </a>
+          <form method="POST" action="/Logout" style="display:inline;">
+            <button type="submit" class="block p-4 rounded-lg text-(--blanc-casse) text-xl hover:bg-gray-800 transition-colors cursor-pointer">
+              Déconnexion
+            </button>
+          </form>
+        </>
+      ) : (
+        <>
+          <a
+            href="/Login"
+            class="block p-4 rounded-lg text-(--blanc-casse) text-xl hover:bg-gray-800 transition-colors"
+          >
+            Connexion
+          </a>
+          <a
+            href="/Register"
+            class="block p-4 rounded-lg text-(--blanc-casse) text-xl hover:bg-gray-800 transition-colors"
+          >
+            Inscription
+          </a>
+        </>
+      )}
     </div>
   </nav>
 </header>

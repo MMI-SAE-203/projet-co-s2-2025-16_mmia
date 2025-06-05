@@ -1,0 +1,10 @@
+---
+const expiredDate = new Date(0).toUTCString();
+return new Response("", {
+  status: 302,
+  headers: {
+    "Location": "/",
+    "Set-Cookie": `pb_auth=; Path=/; Expires=${expiredDate}; HttpOnly; SameSite=Lax; Secure`
+  }
+});
+---
