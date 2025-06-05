@@ -1,33 +1,120 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import CardPost from "../../components/Card_post.astro";
-import { getPosts } from "../../../backend/backend.mjs";
-import { requireAuth, getCurrentUser } from "../../../script/auth"; 
+import { getPosts, addNewPost } from "../../../backend/backend.mjs";
+import PocketBase from "pocketbase";
 
-//const authCheck = await requireAuth(Astro);
-//if (authCheck) return authCheck;
-//const user = await getCurrentUser();
+const cookieStr = Astro.cookies?.get("pb_auth")?.value;
 
-const {id} = Astro.params;
-
-let message ='';
+let message = '';
 let posts = [];
+let isLoggedIn = false;
+let userName = "";
 
-posts = await getPosts() || [];
+if (cookieStr) {
+  const pb = new PocketBase("https://mmia.pauldarlef.fr:443");
+  pb.authStore.loadFromCookie(`pb_auth=${cookieStr}`);
+  if (pb.authStore.isValid && pb.authStore.model) {
+    isLoggedIn = true;
+    userName = pb.authStore.model.Pseudo || pb.authStore.model.username || pb.authStore.model.name || (pb.authStore.model.email ? pb.authStore.model.email.split('@')[0] : "");
+  }
+}
+
+if (Astro.request.method === "POST" && isLoggedIn) {
+  const formData = await Astro.request.formData();
+  const titre = formData.get("titre")?.toString();
+  const text = formData.get("text")?.toString();
+  const specialite = formData.get("specialite")?.toString();
+
+  if (!titre || !text || !specialite) {
+    message = "Tous les champs sont obligatoires.";
+  } else {
+    try {
+      await addNewPost(
+        {
+          Titre: titre,
+          Text: text,
+          Specialite: specialite,
+        },
+        cookieStr
+      );
+      message = "Post créé avec succès !";
+    } catch (e) {
+      message = "Erreur lors de la création du post.";
+    }
+  }
+}
+
+posts = await getPosts(cookieStr) || [];
 
 if (!posts){
 	return Astro.redirect ('/posts');
 }
-console.log(posts)
 ---
 
 <Layout titre=Forum>
-    
     <div class="relative block">
         <span class="absolute inset-x-0 bottom-0 h-2 bg-[-var(--violet)] z-0"></span>
         <h1 class="text-4xl font-bold text-center my-12">Forum</h1>
     </div>
-    <div class="">
+    {isLoggedIn && (
+      <div class="max-w-md mx-auto mb-10">
+        <form method="POST" class="bg-[var(--blanc-casse)] rounded-2xl shadow-lg border-2 border-[var(--violet)] p-6 flex flex-col gap-4">
+          {message && <div class="text-center text-red-500">{message}</div>}
+          <div class="flex flex-col gap-2">
+            <label class="text-[var(--violet)] font-bold" for="titre">Titre</label>
+            <input
+              class="rounded-lg border border-[var(--violet)] px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--violet)]"
+              id="titre"
+              name="titre"
+              type="text"
+              placeholder="Titre du post"
+              required
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-[var(--violet)] font-bold" for="text">Contenu</label>
+            <textarea
+              class="rounded-lg border border-[var(--violet)] px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--violet)]"
+              id="text"
+              name="text"
+              rows="4"
+              placeholder="Votre message"
+              required
+            ></textarea>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label class="text-[var(--violet)] font-bold" for="specialite">Spécialité</label>
+            <select
+              id="specialite"
+              name="specialite"
+              class="rounded-lg border border-[var(--violet)] px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--violet)]"
+              required
+            >
+              <option value="">Choisissez une spécialité</option>
+              <option value="Design">Design</option>
+              <option value="Developpement">Développement</option>
+              <option value="Communication">Communication</option>
+            </select>
+          </div>
+          <div class="flex items-center justify-between">
+            <button
+              class="bg-[var(--violet)] hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--violet)]"
+              type="submit"
+            >
+              Créer le post
+            </button>
+            <span class="text-sm text-gray-500">Connecté en tant que <span class="font-semibold">{userName}</span></span>
+          </div>
+        </form>
+      </div>
+    )}
+    {!isLoggedIn && (
+      <div class="max-w-md mx-auto mb-10 text-center text-[var(--violet)] bg-[var(--blanc-casse)] rounded-2xl shadow-lg border-2 border-[var(--violet)] p-6">
+        <p>Connectez-vous pour créer un post.</p>
+      </div>
+    )}
+    <div>
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 mt-12">
             {posts.map((post:any) => <CardPost {...post} />)}
         </div> 
