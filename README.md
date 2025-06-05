@@ -3,20 +3,20 @@
 
 Éléménts à renseigner pour la soutenance :
 
-- [ ] Nom du projet :
-- [ ] URL de la landing page :
-- [ ] URL de l'application finale :
-- [ ] URL de connexion au back office :
-- [ ] Identifiant de connexion au backoffice :
-- [ ] Mot de passe de connexion au backoffice :
+- [ ] Nom du projet : MMIA
+- [ ] URL de la landing page : mmia.netlify.app
+- [ ] URL de l'application finale : mmia.netlify.app
+- [ ] URL de connexion au back office : mmia.pauldarlef.fr/_/
+- [ ] Identifiant de connexion au backoffice : paul.darle-felbacq@edu.univ-fcomte.fr
+- [ ] Mot de passe de connexion au backoffice : DpM4567_8-
 - [ ] URL de la maquette FIGMA : https://www.figma.com/design/iuVS9lKOwmfgw7VWl60jo8/Projet-Co-S2?node-id=0-1&t=TvKVLsYtMXutQCOg-1
-- [ ] Description du projet :
+- [ ] Description du projet : Une IA pour les étudiant en MMI, ainsi qu'un forum pour promouvoir l'entraide entre les étudiants en MMI.
 
 ## 🚀 Équipe
 
 | Étudiants    | Prénom NOM  |
 | :----------- | :---------- |
-| Étudiant 1   | à compléter |
-| Étudiant 2   | à compléter |
+| Étudiant 1   | Paul Darle-Felbacq |
+| Étudiant 2   | Jules Becquelin |
 | Étudiant 3   | à compléter |
 | (Étudiant 4) | à compléter |
