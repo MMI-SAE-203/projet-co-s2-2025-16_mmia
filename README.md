@@ -9,7 +9,7 @@
 - [ ] URL de connexion au back office :
 - [ ] Identifiant de connexion au backoffice :
 - [ ] Mot de passe de connexion au backoffice :
-- [ ] URL de la maquette FIGMA :
+- [ ] URL de la maquette FIGMA : https://www.figma.com/design/iuVS9lKOwmfgw7VWl60jo8/Projet-Co-S2?node-id=0-1&t=TvKVLsYtMXutQCOg-1
 - [ ] Description du projet :
 
 ## 🚀 Équipe
