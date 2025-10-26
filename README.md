@@ -7,8 +7,8 @@
 - [ ] URL de la landing page : mmia.netlify.app
 - [ ] URL de l'application finale : mmia.netlify.app
 - [ ] URL de connexion au back office : mmia.pauldarlef.fr/_/
-- [ ] Identifiant de connexion au backoffice : paul.darle-felbacq@edu.univ-fcomte.fr
-- [ ] Mot de passe de connexion au backoffice : DpM4567_8-
+- [ ] Identifiant de connexion au backoffice : 
+- [ ] Mot de passe de connexion au backoffice : 
 - [ ] URL de la maquette FIGMA : https://www.figma.com/design/iuVS9lKOwmfgw7VWl60jo8/Projet-Co-S2?node-id=0-1&t=TvKVLsYtMXutQCOg-1
 - [ ] Description du projet : Une IA pour les étudiant en MMI, ainsi qu'un forum pour promouvoir l'entraide entre les étudiants en MMI.
 
